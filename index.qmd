@@ -1,0 +1,44 @@
+# Előszó {.unnumbered}
+
+Tisztelt Olvasó!
+
+Ez az e-könyv a *Posta Biztosító* munkatársai számára készült és elsősorban a **Többváltozós statisztika** $\texttt{R}$ programnyelven című tanfolyam támogatását szolgálja. A könyv részletesen tárgyalja az $\texttt{R}$ programnyelv alapjait, azonban feltételezi bizonyos matematikai, statisztikai alaptudás (lineáris algebra, matematikai statisztika, mértékelmélet, valószínűségszámítás) meglétét. A tanfolyam célja, hogy megismertesse a hallgatókat az általánosított lineáris modellek (GLM) elméletével valamint a függvényapproximáció során alkalmazott diagnosztikai eljárásokkal, különös tekintettel a biztosítási modellezés során leggyakrabban előforduló eljárásokra. A kurzus során a lineáris és frekventista valózínűségi felfogáson alapuló függvényillesztési és diagnosztikai eljárásokat tárgyaljuk, csupán az utolsó fejezet tartalmaz kitekintést a nemlineáris valamint a bayes-i esetekre.
+
+A könyv nélkülözi a nem megkerülhetetlen matematikai levezetéseket, és elsősorban biztosítási esettanulmány alapokra épít. Az érdeklődő Olvasó azonban az ajánlott irodalomból teljes körűen tájékozódhat a tárgyalt módszerról. Az irodalmakat minden fejezet végén feltüntetjük.
+
+Kérdés esetén állok rendelkezésükre: vakhal.peter\@gmail.com
+
+Jó munkát kívánok!
+
+Bécs - Budapest, 2026. július 16.
+
+*Vakhal Péter*
+
+## A könyv (tevezett) felépítése:
+
+1.  Bevezetés az $\texttt{R}$ környezetbe és az adatkezelésbe
+2.  Exploratív elemzés és adatvizualizáció
+3.  Bevezetés a GLM elméletébe és az exponenciális eloszláscsalád alapjaiba
+4.  Faktorok, kontrasztok kódolása, elemzése GLM modellekben
+5.  Interakciók és bevezetés a nemlinearitásba GLM modellekben
+6.  Kárgyakoriság modellezése és a kitettség kezelése
+7.  Kárnagyság és a díj modellezése
+8.  Modellvalidáció és diagnosztika
+9.  Biztosítás specifikus témák (IBNR, kárfejlődési háromszög, bónusz-malusz, időfüggő kovariánsok stb.)
+10. Kitekintés a GAM (nemlinearitás) és bayes-i modellekre
+
+## Miről nem fog szólni a kurzus és a könyv?
+
+A többváltozós vagy többdimenziós statisztika egy rendkívül széles intervallumot magában foglaló tudományterület, aminek saját elméleti keretrendszere van, bár kétségkívül sokat merít az egyváltozós módszerek tárházából. Ezeket egy kurzus alkalmával lehetetlen lenne mind átvenni, de a teljesség igénye nélkül megemlítjük őket.
+
+* Többdimenziós következtetéselmélet
+* Dimenziócsökkentési eljárások
+* Szegmentációs, partíciós eljárások - felügyelő nélkül (pl.: klaszter)
+* Szegmentációs, partíciós eljárások - felügyelővel (pl.: döntési fák)
+* Topologikus skálázás (pl.: MDS)
+* Hálózatok, gráfok
+* Többváltozós idősorok (pl.: VAR modellek)
+
+## A szerzőről
+
+Dr. Vakhal Péter, egyetemi adjunktus. [Doktori fokozatát](https://phd.lib.uni-corvinus.hu/1180/19/Vakhal_Peter_den.pdf) 2022-ben szerezte a Budapesti Corvinus Egyetemen. 2011 és 2026 között az egyetem Operációkutatás és Aktuáriustudományok Tanszékének munkatársa volt, másfél évtizednyi oktatói, kutatói tapasztalattal rendelkezik többváltozós statisztika területen. 2026 augusztustól a Pannon Egyetem Kvantitatív Módszerek Intézeti Tanszék egyetemi adjunktusa. Emellett 2006-tól dolgozik kutatóként a Kopint-Tárki Konjunktúratkutató Intézetben. Egy gyermek édesapja. [Linkedin profil](https://www.linkedin.com/in/peter-vakhal-9b5a33298)

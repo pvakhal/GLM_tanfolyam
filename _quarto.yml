@@ -1,0 +1,23 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "GLM alapú többváltozós statisztikai modellek biztosítási alkalmazásokkal"
+  author: "Vakhal Péter"
+  date: "2026"
+  chapters:
+    - index.qmd
+    - 1_Bevezetes.qmd
+    - 2_EDA.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+  pdf:
+    documentclass: scrreprt
+
+
+
