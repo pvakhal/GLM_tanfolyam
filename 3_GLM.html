@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Vakhal Péter">
-<meta name="dcterms.date" content="2026-01-01">
 
-<title>GLM alapú többváltozós statisztikai modellek biztosítási alkalmazásokkal</title>
+<title>3&nbsp; Általánosított lineáris modellek (GLM) – GLM alapú többváltozós statisztikai modellek biztosítási alkalmazásokkal</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -35,7 +33,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./1_Bevezetes.html" rel="next">
+<link href="./2_EDA.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -74,6 +72,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -86,7 +113,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Előszó</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3_GLM.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Általánosított lineáris modellek (GLM)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -113,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Előszó</span></a>
   </div>
 </li>
@@ -131,7 +158,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3_GLM.html" class="sidebar-item-text sidebar-link">
+  <a href="./3_GLM.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Általánosított lineáris modellek (GLM)</span></span></a>
   </div>
 </li>
@@ -145,11 +172,20 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#előszó" id="toc-előszó" class="nav-link active" data-scroll-target="#előszó">Előszó</a>
+  <li><a href="#miről-lesz-szó-a-fejezetben" id="toc-miről-lesz-szó-a-fejezetben" class="nav-link active" data-scroll-target="#miről-lesz-szó-a-fejezetben"><span class="header-section-number">4</span> Miről lesz szó a fejezetben?</a></li>
+  <li><a href="#általánosított-lineáris-modellek" id="toc-általánosított-lineáris-modellek" class="nav-link" data-scroll-target="#általánosított-lineáris-modellek"><span class="header-section-number">5</span> Általánosított lineáris modellek</a>
   <ul class="collapse">
-  <li><a href="#a-könyv-tevezett-felépítése" id="toc-a-könyv-tevezett-felépítése" class="nav-link" data-scroll-target="#a-könyv-tevezett-felépítése">A könyv (tevezett) felépítése:</a></li>
-  <li><a href="#miről-nem-fog-szólni-a-kurzus-és-a-könyv" id="toc-miről-nem-fog-szólni-a-kurzus-és-a-könyv" class="nav-link" data-scroll-target="#miről-nem-fog-szólni-a-kurzus-és-a-könyv">Miről nem fog szólni a kurzus és a könyv?</a></li>
-  <li><a href="#a-szerzőről" id="toc-a-szerzőről" class="nav-link" data-scroll-target="#a-szerzőről">A szerzőről</a></li>
+  <li><a href="#lineáris-modellek-visszatekintő" id="toc-lineáris-modellek-visszatekintő" class="nav-link" data-scroll-target="#lineáris-modellek-visszatekintő"><span class="header-section-number">5.1</span> Lineáris modellek visszatekintő</a></li>
+  <li><a href="#univariáns-általánosított-lineáris-modellek" id="toc-univariáns-általánosított-lineáris-modellek" class="nav-link" data-scroll-target="#univariáns-általánosított-lineáris-modellek"><span class="header-section-number">5.2</span> Univariáns általánosított lineáris modellek</a>
+  <ul class="collapse">
+  <li><a href="#a-modellek-felírása" id="toc-a-modellek-felírása" class="nav-link" data-scroll-target="#a-modellek-felírása"><span class="header-section-number">5.2.1</span> A modellek felírása</a></li>
+  </ul></li>
+  <li><a href="#a-link-függvény" id="toc-a-link-függvény" class="nav-link" data-scroll-target="#a-link-függvény"><span class="header-section-number">5.3</span> A link függvény</a></li>
+  <li><a href="#modellek-folytonos-eloszlású-függő-változóval" id="toc-modellek-folytonos-eloszlású-függő-változóval" class="nav-link" data-scroll-target="#modellek-folytonos-eloszlású-függő-változóval"><span class="header-section-number">5.4</span> Modellek folytonos eloszlású függő változóval</a>
+  <ul class="collapse">
+  <li><a href="#normális-eloszlás" id="toc-normális-eloszlás" class="nav-link" data-scroll-target="#normális-eloszlás"><span class="header-section-number">5.4.1</span> Normális eloszlás</a></li>
+  <li><a href="#gamma-eloszlás" id="toc-gamma-eloszlás" class="nav-link" data-scroll-target="#gamma-eloszlás"><span class="header-section-number">5.4.2</span> Gamma eloszlás</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -159,26 +195,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">GLM alapú többváltozós statisztikai modellek biztosítási alkalmazásokkal</h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Általánosított lineáris modellek (GLM)</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Vakhal Péter </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -188,48 +212,164 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="előszó" class="level1 unnumbered">
-<h1 class="unnumbered">Előszó</h1>
-<p>Tisztelt Olvasó!</p>
-<p>Ez az e-könyv a <em>Posta Biztosító</em> munkatársai számára készült és elsősorban a <strong>Többváltozós statisztika</strong> <code>R</code> programnyelven című tanfolyam támogatását szolgálja. A könyv részletesen tárgyalja az <code>R</code> programnyelv alapjait, azonban feltételezi bizonyos matematikai, statisztikai alaptudás (lineáris algebra, matematikai statisztika, mértékelmélet, valószínűségszámítás) meglétét. A tanfolyam célja, hogy megismertesse a hallgatókat az általánosított lineáris modellek (GLM) elméletével valamint a függvényapproximáció során alkalmazott diagnosztikai eljárásokkal, különös tekintettel a biztosítási modellezés során leggyakrabban előforduló eljárásokra. A kurzus során a lineáris és frekventista valózínűségi felfogáson alapuló függvényillesztési és diagnosztikai eljárásokat tárgyaljuk, csupán az utolsó fejezet tartalmaz kitekintést a nemlineáris valamint a bayes-i esetekre.</p>
-<p>A könyv nélkülözi a nem megkerülhetetlen matematikai levezetéseket, és elsősorban biztosítási esettanulmány alapokra épít. Az érdeklődő Olvasó azonban az ajánlott irodalomból teljes körűen tájékozódhat a tárgyalt módszerról. Az irodalmakat minden fejezet végén feltüntetjük.</p>
-<p>Kérdés esetén állok rendelkezésükre: vakhal.peter@gmail.com</p>
-<p>Jó munkát kívánok!</p>
-<p>Bécs - Budapest, 2026. július 16.</p>
-<p><em>Vakhal Péter</em></p>
-<section id="a-könyv-tevezett-felépítése" class="level2">
-<h2 class="anchored" data-anchor-id="a-könyv-tevezett-felépítése">A könyv (tevezett) felépítése:</h2>
+<section id="miről-lesz-szó-a-fejezetben" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Miről lesz szó a fejezetben?</h1>
+<p>Ebben a fejezetben részletesen áttekintjük az általánosított lineáris modellek elméletét és gyakorlati kódolását <code>R</code>-ben. A fejezet az elméleti áttekintéssel kezdődik. Külön hangsúlyt fektetünk a biztosítási esetekre.</p>
+</section>
+<section id="általánosított-lineáris-modellek" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Általánosított lineáris modellek</h1>
+<section id="lineáris-modellek-visszatekintő" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="lineáris-modellek-visszatekintő"><span class="header-section-number">5.1</span> Lineáris modellek visszatekintő</h2>
+<p>A klasszikus lineáris modellek leginkább akkor használhatók, ha a függő változó normális eloszlását megközelítőleg normálisnak feltételezzük, a folyamat pedig valamilyen lineáris struktúrával közelíthető.</p>
+<p>Legyen tehát <span class="math inline">\(y_1, y_2, \dots y_n \in Y \sim N(\mu, \sigma_y^2)\)</span> függő változó és legyen <span class="math inline">\(x_{np} \in X^{n \times p}\)</span> prediktor mátrix, amelyre teljesül, hogy <span class="math inline">\(y_i=\beta_0+\sum_{j=1}^p \beta_j x_{ij} + \epsilon_{i}\)</span>, valamint <span class="math inline">\(\epsilon \sim N(0,\sigma_{\epsilon}^2)\)</span>. <span class="math inline">\(\beta\)</span> koefficiensek becslését a <span class="math inline">\(\sum \epsilon^2\)</span> hibanégyzetösszeg minimalizálása adja.</p>
+<p>A feladat megoldásához rögzítsük, hogy <span class="math inline">\(E(\epsilon)=0\)</span>, valamint <span class="math inline">\(Var(\epsilon)=\sigma_{\epsilon}I_n\)</span>, ahol <span class="math inline">\(I_n\)</span> egy <span class="math inline">\(n\times n\)</span> méretű <em>diagonális</em> mátrix. Célfüggvényünk a következő:</p>
+<p><span class="math display">\[
+RSS(\mathbf{\beta})=\sum (y_i-\mathbf{x_i^T \beta})^2=(\mathbf{Y-X\beta})^T(\mathbf{Y-X\beta})
+\]</span></p>
+<p>Átrendeződés után adódik, hogy</p>
+<p><span class="math display">\[
+\mathbf{\hat{\beta}}=(\mathbf{X^TX})^{-1}\mathbf{X^TY}
+\]</span></p>
+<p>A megoldáshoz szükséges, hogy <span class="math inline">\((\mathbf{X^TX})^{-1}\)</span> determinánsa nem lehet nulla. Ha az így lenne, akkor tökéletes multikollinearitást jelentene. Az egyenlet megoldása numerikus módszereket igényel, azért hogy egy nagy mátrix inverzét is gyorsan ki tudja számolni a számítógép. Ha <span class="math inline">\(\hat{\beta}\)</span> vektor már rendelkezésre áll <span class="math inline">\(\hat{\beta_0}\)</span> becslés már könnyen előállítható:</p>
+<p><span class="math display">\[
+\hat{\beta_0}=\overline{y}-\mathbf{\hat{\beta}}^T\mathbf{\overline{x}}
+\]</span></p>
+<p>Béta varianciája a következő módon becsülhető:</p>
+<p><span class="math display">\[
+Var(\hat{\beta})=\sigma^2(X^T X)^{-1}
+\]</span></p>
+<p>ahol,</p>
+<p><span class="math inline">\(\sigma^2\)</span> az <span class="math inline">\(\epsilon_i\)</span> rezidiumok varianciája.</p>
+<p>Ezzel az eljárással az approximációs feladatok azon része, ahol a kezdeti feltételek teljesülnek megoldhatók, a becslések torzítatlansága mellett.</p>
+</section>
+<section id="univariáns-általánosított-lineáris-modellek" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="univariáns-általánosított-lineáris-modellek"><span class="header-section-number">5.2</span> Univariáns általánosított lineáris modellek</h2>
+<section id="a-modellek-felírása" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="a-modellek-felírása"><span class="header-section-number">5.2.1</span> A modellek felírása</h3>
+<p>A következő feltételezések az általánosított modellekben is élnek:</p>
 <ol type="1">
-<li>Bevezetés az <code>R</code> környezetbe és az adatkezelésbe</li>
-<li>Exploratív elemzés és adatvizualizáció</li>
-<li>Bevezetés a GLM elméletébe és az exponenciális eloszláscsalád alapjaiba</li>
-<li>Faktorok, kontrasztok kódolása, elemzése GLM modellekben</li>
-<li>Interakciók és bevezetés a nemlinearitásba GLM modellekben</li>
-<li>Kárgyakoriság modellezése és a kitettség kezelése</li>
-<li>Kárnagyság és a díj modellezése</li>
-<li>Modellvalidáció és diagnosztika</li>
-<li>Biztosítás specifikus témák (IBNR, kárfejlődési háromszög, bónusz-malusz, időfüggő kovariánsok stb.)</li>
-<li>Kitekintés a GAM (nemlinearitás) és bayes-i modellekre</li>
+<li>Eloszlásokra vonatkozó feltétel: fel tennünk, hogy <span class="math inline">\(x_i\)</span> és <span class="math inline">\(y_i\)</span> függetlenek, és <span class="math inline">\(y_i\)</span> eloszlása tagja az <strong>exponenciális eloszláscsaládnak</strong> <span class="math inline">\(E(y_i | x_i)=\mu_i\)</span> feltételes várható értékkel, és lehetőleg egy közös <span class="math inline">\(\phi\)</span> skálaparaméterrel.</li>
+<li>Szerkezetre vonatkozó feltétel: <span class="math inline">\(\mu_i\)</span> becslése függ az <span class="math inline">\(\eta_i=z_i^T\beta\)</span> lineáris prediktortól mégpedig a következő módon: <span class="math inline">\(\mu_i=h(\eta_i)=h(z_i^T\beta)\)</span> módon. Ennek inverze pedig <span class="math inline">\(\eta_i\)</span> szerint felírva pedig <span class="math display">\[
+\eta_i=g(\mu_i)
+\]</span></li>
 </ol>
-</section>
-<section id="miről-nem-fog-szólni-a-kurzus-és-a-könyv" class="level2">
-<h2 class="anchored" data-anchor-id="miről-nem-fog-szólni-a-kurzus-és-a-könyv">Miről nem fog szólni a kurzus és a könyv?</h2>
-<p>A többváltozós vagy többdimenziós statisztika egy rendkívül széles intervallumot magában foglaló tudományterület, aminek saját elméleti keretrendszere van, bár kétségkívül sokat merít az egyváltozós módszerek tárházából. Ezeket egy kurzus alkalmával lehetetlen lenne mind átvenni, de a teljesség igénye nélkül megemlítjük őket.</p>
+<p>ahol,</p>
+<p><em>h</em> = egy simító függvény</p>
+<p><em>g</em> = a link függvény, ha <em>h</em> inverze</p>
+<p><span class="math inline">\(\beta\)</span> = ismeretlen paramétervektor</p>
+<p><span class="math inline">\(z_i\)</span> = magyarázó változó vektora amely egy megfelelő <span class="math inline">\(z_i=z(x_i)\)</span> transzformáció útján állítható elő.</p>
+<p>Az általánosított lineáris modell három komponensből áll:</p>
 <ul>
-<li>Többdimenziós következtetéselmélet</li>
-<li>Dimenziócsökkentési eljárások</li>
-<li>Szegmentációs, partíciós eljárások - felügyelő nélkül (pl.: klaszter)</li>
-<li>Szegmentációs, partíciós eljárások - felügyelővel (pl.: döntési fák)</li>
-<li>Topologikus skálázás (pl.: MDS)</li>
-<li>Hálózatok, gráfok</li>
-<li>Többváltozós idősorok (pl.: VAR modellek)</li>
+<li><strong>exponenciális eloszláscsalád</strong></li>
+<li><strong>link függvény</strong></li>
+<li><strong>magyarázó változók transzformált vektora</strong></li>
 </ul>
+<div class="callout callout-style-default callout-important callout-titled" title="Az exponenciális családba tartozó eloszlások általános alakja">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Az exponenciális családba tartozó eloszlások általános alakja
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Minden exponenciális eloszláscsaládba tartozó eloszlás felírható a következőképpen:</p>
+<p><span class="math display">\[
+f(y_i | \theta_i, \phi, \omega_i)=exp \left\{ \frac {y_i\theta_i-b(\theta_i)} {\phi} +c(y_i, \phi, \omega_i) \right\}
+\]</span> ahol,</p>
+<p><span class="math inline">\(\theta_i\)</span> = egy ún. természetes paraméter</p>
+<p><span class="math inline">\(\phi\)</span> = skálaparaméter</p>
+<p><span class="math inline">\(b(\cdot)\)</span> és <span class="math inline">\(c(\cdot)\)</span> = az adott eloszláshoz tartozó specifikus paraméterek</p>
+<p><span class="math inline">\(\omega_i\)</span> = súly. Nem csoportosított (súlyozatlan) adatok esetén <span class="math inline">\(\omega_i=1\)</span> <span class="math inline">\(\forall i\)</span>, míg súlyozott esetben <span class="math inline">\(\omega_i=n_i\)</span>, ahol <span class="math inline">\(n_i\)</span> a megfigyelések száma az adott csoportban. Természetesen arányként is kifejezhető.</p>
+<p>Az eloszláscsalád legfontosabb tagjai: <strong>normális, binomiális, Poisson, gamma és inverz gamma</strong> eloszlások.</p>
+<p>A <span class="math inline">\(\theta\)</span> természetes paraméter a várható érték egy függvénye <span class="math inline">\(\theta_i=\theta(\mu_i)\)</span>, amit az eloszlásra vonatkoztatva számítunk a következőképpen: <span class="math inline">\(\mu=b^{'}(\theta)\)</span>.</p>
+<p>A függő változó varianciája következőképpen alakul:</p>
+<p><span class="math display">\[
+var(y_i|x_i)=\sigma^2(\mu_i)=\phi \upsilon (\mu_i) / \omega_i
+\]</span></p>
+<p>ahol <span class="math inline">\(\upsilon\)</span> szinten az adott függvény specifikuma mégpedig a <span class="math inline">\(\upsilon(\mu)=b^{''}(\theta)\)</span> formában.</p>
+</div>
+</div>
+<p>Látható tehát, hogy a várható érték <span class="math inline">\(\mu=h(z^{'}\beta)\)</span> szerkezetét minden esetben egy specifikus varianciastruktúra követi.</p>
 </section>
-<section id="a-szerzőről" class="level2">
-<h2 class="anchored" data-anchor-id="a-szerzőről">A szerzőről</h2>
-<p>Dr.&nbsp;Vakhal Péter, egyetemi adjunktus. <a href="https://phd.lib.uni-corvinus.hu/1180/19/Vakhal_Peter_den.pdf">Doktori fokozatát</a> 2022-ben szerezte a Budapesti Corvinus Egyetemen. 2011 és 2026 között az egyetem Operációkutatás és Aktuáriustudományok Tanszékének munkatársa volt, másfél évtizednyi oktatói, kutatói tapasztalattal rendelkezik többváltozós statisztika területen. 2026 augusztustól a Pannon Egyetem Kvantitatív Módszerek Intézeti Tanszék egyetemi adjunktusa. Emellett 2006-tól dolgozik kutatóként a Kopint-Tárki Konjunktúratkutató Intézetben. Egy gyermek édesapja. <a href="https://www.linkedin.com/in/peter-vakhal-9b5a33298">Linkedin profil</a></p>
+</section>
+<section id="a-link-függvény" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="a-link-függvény"><span class="header-section-number">5.3</span> A link függvény</h2>
+<p>A megfelelő link függvényt minden esetben az eloszláshoz kell választani, azonban minden eloszláshoz rendelhető egy kanonikus alak (a lehető legegyszerűbb formában felírható alak). A természetes link függvények <span class="math inline">\(\theta\)</span> természetes paramétert kötik össze közvetlenül a lineáris prediktorral:</p>
+<p><span class="math display">\[
+\theta=\theta(\mu)=\eta=z^{'}\beta
+\]</span></p>
+<div class="callout callout-style-default callout-tip callout-titled" title="A leggyakrabban alkalmazott link függvények">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>A leggyakrabban alkalmazott link függvények
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Minden eloszláscsalád rendelkezik saját link függvénnyel. A leggyakoribbak:</p>
+<p><strong>Normális eloszlás</strong></p>
+<p><span class="math display">\[
+\eta = \mu
+\]</span></p>
+<p><strong>Poisson eloszlás</strong></p>
+<p><span class="math display">\[
+\eta=log(\mu)
+\]</span></p>
+<p><strong>Binomiális eloszlás</strong></p>
+<p><span class="math display">\[
+\eta=log \left( \frac {\mu} {1-\mu} \right)
+\]</span></p>
+<p>Minden eloszlástípushoz megtalálható a linkfüggvény a <a href="https://en.wikipedia.org/wiki/Generalized_linear_model">Wikipedia</a> oldalán.</p>
+</div>
+</div>
+<p>A magyarázó változók vektorát illetően nincs igazán változás a klasszikus lineáris modellekhez képest: legtöbbször a modell tartalmaz egy konstanst (<span class="math inline">\(\beta_0\)</span>), ami a főátlagot jeleníti meg, tehát <em>z</em> a következő <span class="math inline">\(z(1,\omega)\)</span> formát ölti. Ebbe a folytonos változók közvetlenül (transzformáció nélkül) beépíthetők, míg a kategorikus változók esetében szükség lehet transzformációra, ha nem bináris változóról van szó, hanem multinominálisról (ez az ún. hot-encoding eljárás).</p>
+</section>
+<section id="modellek-folytonos-eloszlású-függő-változóval" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="modellek-folytonos-eloszlású-függő-változóval"><span class="header-section-number">5.4</span> Modellek folytonos eloszlású függő változóval</h2>
+<section id="normális-eloszlás" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="normális-eloszlás"><span class="header-section-number">5.4.1</span> Normális eloszlás</h3>
+<p>Feltételezve, hogy <span class="math inline">\(y \in Y \sim N(\mu, \sigma^2)\)</span> a <em>természetes link függvény</em> választása a klasszikus lineáris modellt implikálja:</p>
+<p><span class="math display">\[
+\mu=\eta=z^{'}\beta
+\]</span></p>
+<p>Természetesen vannak esetek, mikor a nemlineáris modell jobban illeszkedik:</p>
+<p><span class="math display">\[
+h(\eta)=\eta^2
+\]</span> <span class="math display">\[
+h(\eta)=log(\eta)
+\]</span></p>
+<p><span class="math display">\[
+h(\eta)=exp(\eta)
+\]</span></p>
+<p>Ezek a nemlineáris alakok is hatékonyan kezelhetők az általánosított modell környezetében.</p>
+</section>
+<section id="gamma-eloszlás" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="gamma-eloszlás"><span class="header-section-number">5.4.2</span> Gamma eloszlás</h3>
+<p>A gamma eloszlás egy hasznos eloszlás olyan regressziós vizsgálatok esetén, amely egy folytonos valószínűségi változót közelít, amely <span class="math inline">\(\mathbb{R}^{+}\)</span> tartományon értelmezett. A sűrűségfüggvény:</p>
+<p><span class="math display">\[
+f(y)= \frac {\beta^{\alpha}} {\Gamma(\alpha)}e^{-\beta y}y^{\alpha-1}
+\]</span> ahol <span class="math inline">\(\alpha, \beta&gt;0\)</span>.</p>
+<p>Ismert, hogy a várható érték <span class="math inline">\(\mu=\alpha/\beta\)</span></p>
+<p>A kanonikus függvény (vegyük a logaritmust, majd alakítsuk vissza):</p>
+<p><span class="math display">\[
+f(y)=\exp\{-\beta y+ (\alpha-1)\text{log }y+\alpha \text{log }\beta- \text{log }\Gamma (\alpha) \}
+\]</span></p>
+<p><span class="math inline">\(\beta\)</span> helyére illesszük be a várható értéket, és egyszerűsítsük az első tagot.</p>
+<p><span class="math display">\[
+f(y)=\text{exp}\left\{(-\alpha) \frac {y} {\mu}\right\}
+\]</span></p>
+<p>Az <span class="math inline">\(\alpha\)</span> paraméter ritkán ismert. Ne felejtsük el, hogy a kanonikus forma a lehető legegyszerűbb alakot takarja, és ha <span class="math inline">\(\alpha\)</span> ismeretlen, akkor célszerű az <span class="math inline">\(\alpha=1\)</span> értéket használni. Ekkor</p>
+<p><span class="math display">\[
+\theta=\eta=-\frac{1} {\mu}
+\]</span></p>
+<p>Vagyis a helyes kanonikus link függvény az inverz.</p>
 
 
+</section>
 </section>
 </section>
 
@@ -636,11 +776,11 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./2_EDA.html" class="pagination-link" aria-label="Feltáró adatelemzés és adatvizualizáció">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Feltáró adatelemzés és adatvizualizáció</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./1_Bevezetes.html" class="pagination-link" aria-label="Bevezetés az R környezetbe és az adatkezelésbe">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bevezetés az R környezetbe és az adatkezelésbe</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

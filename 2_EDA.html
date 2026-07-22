@@ -68,6 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./3_GLM.html" rel="next">
 <link href="./1_Bevezetes.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -191,6 +192,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Feltáró adatelemzés és adatvizualizáció</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3_GLM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Általánosított lineáris modellek (GLM)</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -273,26 +280,29 @@ window.Quarto = {
 <li>Outcome: Volt-e benyújtott kárigénye az ügyfélnek?</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>car_insur <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Car_Insurance_Claim.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'readr' csomag az R 4.5.3 verziójával lett fordítva</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Car_Insurance_Claim.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 10000 Columns: 19
--- Column specification --------------------------------------------------------
+── Column specification ────────────────────────────────────────────────────────
 Delimiter: ","
 chr  (8): AGE, GENDER, RACE, DRIVING_EXPERIENCE, EDUCATION, INCOME, VEHICLE_...
 dbl (11): ID, CREDIT_SCORE, VEHICLE_OWNERSHIP, MARRIED, CHILDREN, POSTAL_COD...
 
-i Use `spec()` to retrieve the full column specification for this data.
-i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 </div>
 <section id="adattípusok-leíró-statisztikája" class="level3" data-number="4.1.1">
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="adattípusok-leíró-statisztikája"><span class="header-section-number">4.1.1</span> Adattípusok leíró statisztikája</h3>
 <p>Az adatok típusáról az <code>str()</code> függvény nyújt bővebb információt, de ugyanezekhez az adatokhoz juthatunk, ha változólistában lenyitjuk a változóhoz tartozó menüt.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(car_insur)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(car_insur)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>spc_tbl_ [10,000 x 19] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+<pre><code>spc_tbl_ [10,000 × 19] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
  $ ID                 : num [1:10000] 569520 750365 199901 478866 731664 ...
  $ AGE                : chr [1:10000] "65+" "16-25" "16-25" "16-25" ...
  $ GENDER             : chr [1:10000] "female" "male" "female" "male" ...
@@ -339,7 +349,7 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 </div>
 <p>Láthatjuk, hogy numerikus és string (chr) típusú adataink vannak. Ez utóbbiakat faktorokként tudjuk kezelni. Ezekről az adatokról szeretnénk egy átfogó képet kapni. A numerikus adatokra vonatkozóan a momentumokra tudunk becsléseket kérni, a kategórikus (faktor) adatokra nézve pedig gyakoriságokat.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(car_insur)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(car_insur)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       ID             AGE               GENDER              RACE          
  Min.   :   101   Length:10000       Length:10000       Length:10000      
@@ -349,14 +359,14 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
  3rd Qu.:753975                                                           
  Max.   :999976                                                           
                                                                           
- DRIVING_EXPERIENCE  EDUCATION            INCOME           CREDIT_SCORE   
- Length:10000       Length:10000       Length:10000       Min.   :0.0534  
- Class :character   Class :character   Class :character   1st Qu.:0.4172  
- Mode  :character   Mode  :character   Mode  :character   Median :0.5250  
-                                                          Mean   :0.5158  
-                                                          3rd Qu.:0.6183  
-                                                          Max.   :0.9608  
-                                                          NA's   :982     
+ DRIVING_EXPERIENCE  EDUCATION            INCOME           CREDIT_SCORE    
+ Length:10000       Length:10000       Length:10000       Min.   :0.05336  
+ Class :character   Class :character   Class :character   1st Qu.:0.41719  
+ Mode  :character   Mode  :character   Mode  :character   Median :0.52503  
+                                                          Mean   :0.51581  
+                                                          3rd Qu.:0.61831  
+                                                          Max.   :0.96082  
+                                                          NA's   :982      
  VEHICLE_OWNERSHIP VEHICLE_YEAR          MARRIED          CHILDREN     
  Min.   :0.000     Length:10000       Min.   :0.0000   Min.   :0.0000  
  1st Qu.:0.000     Class :character   1st Qu.:0.0000   1st Qu.:0.0000  
@@ -404,24 +414,24 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 <h3 data-number="4.1.2" class="anchored" data-anchor-id="középértékek"><span class="header-section-number">4.1.2</span> Középértékek</h3>
 <p>Centrális mutatók kizárólag folytonos változók esetén számíthatók, a szintaxis meglehetősen egyszerű. Használjuk a <em>credit score</em> változót a feladatra.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(car_insur<span class="sc">$</span>CREDIT_SCORE) <span class="co"># minden bizonnyal tartalmaz hiányzó adatot a vektor</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(car_insur<span class="sc">$</span>CREDIT_SCORE) <span class="co"># minden bizonnyal tartalmaz hiányzó adatot a vektor</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">is.na</span>(car_insur)) <span class="co"># valóban vannak hiányzó adataink</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">is.na</span>(car_insur)) <span class="co"># valóban vannak hiányzó adataink</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  FALSE   TRUE 
 188061   1939 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>) <span class="co"># hagyjuk figyelmen kívül a hiányzó adatokat</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>) <span class="co"># hagyjuk figyelmen kívül a hiányzó adatokat</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.5158128</code></pre>
 </div>
 </div>
 <p>Középérték mutató még a medián, nem paraméteres próbák esetén sokszor inkább ez használatos.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.5250328</code></pre>
 </div>
@@ -431,22 +441,22 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 <h3 data-number="4.1.3" class="anchored" data-anchor-id="diszperzitási-mutatók"><span class="header-section-number">4.1.3</span> Diszperzitási mutatók</h3>
 <p>A szórás és a variancia számítása szintén rendkívül egyszerű, azonban a hiányzó adatokra itt is korrigálni szükséges.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>) <span class="co"># szórás</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>) <span class="co"># szórás</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1376881</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.01895801</code></pre>
 </div>
 </div>
 <p>Némiképp robusztusabb szóródási mutató az interkvartilis terjedelem (Q2-Q3 közötti távolság) és az átlagos abszolút deviancia (<em>MAD</em>).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2011203</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mad</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mad</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1475353</code></pre>
 </div>
@@ -456,9 +466,9 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 <h3 data-number="4.1.4" class="anchored" data-anchor-id="kvantilisek"><span class="header-section-number">4.1.4</span> Kvantilisek</h3>
 <p>A tiszta díj számításánál a kockázati prémium meghatározásához a felső kvantilisek (VaR-szerű mutatók) elemzése szükséges. A <code>quantile()</code> függvény alapértelmezetten csak a kvantilisek (Q1, Q2, Q3, Q4) számolja ki, ha eltérőt szeretnénk, akkor külön vektorban kell rögzíteni a kívánt értékeket.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(car_insur<span class="sc">$</span>CREDIT_SCORE,</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>),</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">na.rm=</span><span class="cn">TRUE</span>) <span class="co"># Kvantilisek meghatározása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(car_insur<span class="sc">$</span>CREDIT_SCORE,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>),</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">na.rm=</span><span class="cn">TRUE</span>) <span class="co"># Kvantilisek meghatározása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      25%       50%       75%       95%       99% 
 0.4171913 0.5250328 0.6183117 0.7226941 0.7946105 </code></pre>
@@ -469,7 +479,7 @@ i Specify the column types or set `show_col_types = FALSE` to quiet this message
 <h3 data-number="4.1.5" class="anchored" data-anchor-id="gyakoriságok"><span class="header-section-number">4.1.5</span> Gyakoriságok</h3>
 <p>Gyakoriságot kizárólag diszkrét vagy kategorikus változók esetén tudunk számolni a már ismert <code>table()</code> paranccsal.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(car_insur<span class="sc">$</span>EDUCATION)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(car_insur<span class="sc">$</span>EDUCATION)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 high school        none  university 
@@ -478,7 +488,7 @@ high school        none  university
 </div>
 <p>A módusz számítására nincs külön függvény, mert az a gyakorisági tábla maximuma.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(car_insur<span class="sc">$</span>SPEEDING_VIOLATIONS)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(car_insur<span class="sc">$</span>SPEEDING_VIOLATIONS)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15 
@@ -486,14 +496,14 @@ high school        none  university
   16   17   18   19   22 
    4    3    1    2    1 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># többféle módon is számolhatjuk a móduszt</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">table</span>(car_insur<span class="sc">$</span>SPEEDING_VIOLATIONS)) <span class="co"># ez csak a maximum értéket adja meg, de nem mondja meg, hogy melyik kategoriához tartozik</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># többféle módon is számolhatjuk a móduszt</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">table</span>(car_insur<span class="sc">$</span>SPEEDING_VIOLATIONS)) <span class="co"># ez csak a maximum értéket adja meg, de nem mondja meg, hogy melyik kategoriához tartozik</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5028</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a legegyszerűbb, ha csökkenő sorrendbe rendezzük a sort() paranccsal</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">table</span>(car_insur<span class="sc">$</span>SPEEDING_VIOLATIONS), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a legegyszerűbb, ha csökkenő sorrendbe rendezzük a sort() paranccsal</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">table</span>(car_insur<span class="sc">$</span>SPEEDING_VIOLATIONS), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    0    1    2    3    4    5    6    7    8   10    9   11   12   13   15   14 
@@ -501,8 +511,8 @@ high school        none  university
   16   17   19   18   22 
    4    3    2    1    1 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mivel így az első elem lesz a módusz, akár kérhetjük csak ezt az elemet</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">table</span>(car_insur<span class="sc">$</span>SPEEDING_VIOLATIONS), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mivel így az első elem lesz a módusz, akár kérhetjük csak ezt az elemet</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">table</span>(car_insur<span class="sc">$</span>SPEEDING_VIOLATIONS), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   0 
 5028 </code></pre>
@@ -535,24 +545,24 @@ P(|\hat{\Theta}-\Theta)&gt;d &lt; \alpha
 <h4 data-number="4.2.2.1" class="anchored" data-anchor-id="normalitás-tesztek"><span class="header-section-number">4.2.2.1</span> Normalitás tesztek</h4>
 <p>A legtöbb próba paraméteres, azaz rendelkeznünk kell valamilyen a populáció eloszlására vonatkozó feltétellel. Általában feltételezzük a normális eloszlást, erre vonatkozóan ugyanakkor nem igazán létezik megbízható próba. Az <code>R</code> bázisváltozata a <code>shapito.test()</code> valamint a <code>ks.test</code> próbákat tartalmazza, amelyek elsősorban kis mintán alkalmazhatók, és nagyon érzékenyek. A <code>shapito.test()</code> például legfeljebb 5000 megfigyelésen futtatható, ezért alkalmazzuk a <code>sample()</code> függvényt egy véletlen mintavételhez.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vizsgáljuk meg a credit_score változó normalitását</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">sample</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="dv">5000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vizsgáljuk meg a credit_score változó normalitását</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">sample</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="dv">5000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
 
 data:  sample(car_insur$CREDIT_SCORE, 5000)
-W = 0.99157, p-value = 9.201e-16</code></pre>
+W = 0.9933, p-value = 1.172e-13</code></pre>
 </div>
 </div>
 <p>A Shapiro-próba null-hipotézise, hogy a vektor normális eloszlásból származik. Itt ezt el kell utasítanunk.</p>
 <p>A Kolmogorov-Smirnov-próba már nagyobb mintán is elvégezhető, de nagyon érzékeny próbáról van szó, amely már a normálitástól való legkisebb eltérést is súlyosan bünteti. Előnye azonban, hogy szinte bármilyen eloszlást meg tudunk is vizsgálni. Mivel két <em>eloszlásfüggvény</em> összehasonlítása történik, ezért a referencia eloszlásnak is kumulatív eloszlásnak kell lennie. Ezt azonban elegendő szövegesen megfogalmazni a <strong>pnorm</strong> paraméterrel.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ks.test</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="st">"pnorm"</span>) <span class="co"># normális eloszlás</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ks.test</span>(car_insur<span class="sc">$</span>CREDIT_SCORE, <span class="st">"pnorm"</span>) <span class="co"># normális eloszlás</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-    One-sample Kolmogorov-Smirnov test
+    Asymptotic one-sample Kolmogorov-Smirnov test
 
 data:  car_insur$CREDIT_SCORE
 D = 0.57035, p-value &lt; 2.2e-16
@@ -561,13 +571,16 @@ alternative hypothesis: two-sided</code></pre>
 </div>
 <p>Jobban szokott működni a nem paraméteres <a href="https://en.wikipedia.org/wiki/Jarque–Bera_test">Jarque-Bera-próba</a>, amely az eloszlás harmadik és negyedik momentumát hasonlítja a normális eloszlás momentumaihoz, ezáltal jóval robusztusabb eredmény érhető el. A függvény a <code>tseries</code> csomagban található. Fontos, hogy nem szerepelhet a vektorban hiányzó adat, ezért azokat előbb az <code>na.omit</code> függvény segítségével hagyjuk figyelmen kívül.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tseries)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tseries)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'tseries' csomag az R 4.5.3 verziójával lett fordítva</code></pre>
+</div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Registered S3 method overwritten by 'quantmod':
   method            from
   as.zoo.data.frame zoo </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jarque.bera.test</span>(<span class="fu">na.omit</span>(car_insur<span class="sc">$</span>CREDIT_SCORE))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jarque.bera.test</span>(<span class="fu">na.omit</span>(car_insur<span class="sc">$</span>CREDIT_SCORE))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Jarque Bera Test
@@ -578,8 +591,8 @@ X-squared = 139.75, df = 2, p-value &lt; 2.2e-16</code></pre>
 </div>
 <p>Sokszor nagyon hasznos az úgynevezett <a href="https://en.wikipedia.org/wiki/Q–Q_plot">QQ-plot</a> megjelenítés is, amely a tapasztalati eloszlás és a teoretikus eloszlás kvantiliseit vizsgálja. Nem tartozik hozzá semmilyen próba, a vizuális megjelenítés által szükséges döntést hozni. Ha a két eloszlás megegyezik, hogy a megfigyelések az azonossági (<span class="math inline">\(x=y\)</span>) egyenesen helyezkednek el. A normális eloszlás vizsgálatára a <code>qqnorm()</code> az azonosság megjelenítésére a <code>qqline()</code> függvény alkalmazandó.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(car_insur<span class="sc">$</span>CREDIT_SCORE)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(car_insur<span class="sc">$</span>CREDIT_SCORE)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(car_insur<span class="sc">$</span>CREDIT_SCORE)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(car_insur<span class="sc">$</span>CREDIT_SCORE)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -608,7 +621,7 @@ X-squared = 139.75, df = 2, p-value &lt; 2.2e-16</code></pre>
 </ul>
 <p>Például kvantilis meghatározása 95%-os konfidenciaszinthez normál eloszlásnál:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.975</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.975</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.959964</code></pre>
 </div>
@@ -620,9 +633,9 @@ X-squared = 139.75, df = 2, p-value &lt; 2.2e-16</code></pre>
 <h4 data-number="4.2.2.2" class="anchored" data-anchor-id="várható-értékre-és-szórásra-vonatkozó-próbák"><span class="header-section-number">4.2.2.2</span> Várható értékre és szórásra vonatkozó próbák</h4>
 <p>Paraméteres próba lévén feltételezzük a normális eloszlást és a populáció varianciájának ismeretét. Ha mindkettő teljesül, akkor <strong>Z-próbát</strong> futtathatunk a <span class="math inline">\(H_0: \mu=\mu_0\)</span> hipotézis ellenőrzésére. Ugyanakkor ez a valóságban nagyon ritkán van így, mivel a szórás rendre nem ismerjük. Ilyenkor a mintából becsüljük és <strong>t-próbát</strong> futtatunk. Például vizsgáljuk meg, hogy a férfiak és a nők által vezetett éves távolság. A <code>R</code> alapértelmezetten nem feltételezi a varianciák azonosságát, ezt azonban átállíthatjuk, ha nyomós indokunk van rá.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(car_insur<span class="sc">$</span>ANNUAL_MILEAGE[car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"female"</span>],</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>       car_insur<span class="sc">$</span>ANNUAL_MILEAGE[car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"male"</span>],</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(car_insur<span class="sc">$</span>ANNUAL_MILEAGE[car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"female"</span>],</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>       car_insur<span class="sc">$</span>ANNUAL_MILEAGE[car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"male"</span>],</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -640,8 +653,8 @@ mean of x mean of y
 <p>A t-próba alapján a két nem által vezetett éves távolság átlaga nem különbözik szignifikánsan.</p>
 <p>Hasonló analógián tesztelhetjük a szórás azonosságára vonatkozó hipotézisünket is a <code>var.test</code> függvénnyel.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(car_insur<span class="sc">$</span>ANNUAL_MILEAGE[car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"female"</span>],</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>       car_insur<span class="sc">$</span>ANNUAL_MILEAGE[car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"male"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(car_insur<span class="sc">$</span>ANNUAL_MILEAGE[car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"female"</span>],</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>       car_insur<span class="sc">$</span>ANNUAL_MILEAGE[car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"male"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     F test to compare two variances
@@ -662,11 +675,11 @@ ratio of variances
 <p>A gyakorlatban gyakran előfordul, hogy arányokat szükséges összehasonlítani, például <em>két</em> csoport kárgyakoriságát. Fontos, hogy a próbák többsége kétutas, vagyis csak kettő csoport összehasonlítására van lehetőség. Többször összehasonlítás is lehetséges, ez azonban sokszor “kényelmetlen”, mert minden ugyanúgy egy hipotézist tudunk tesztelni, a próba azonban globális, azaz például <span class="math inline">\(H_0: \mu_1=\mu_2+\dots+\mu_m\)</span>.</p>
 <p>Vizsgáljuk meg, hogy eltér-e a két nem kárgyakorisága! A <code>prop.test()</code> függvény több argumentumot kér. Nem szükséges kiszámolni az arányokat, hanem csak a “sikeres” próbálkozások számát kell megadni, valamint a mintanagyságot. A szűréshez használjuk most a <code>subset()</code> parancsot, amit nagyon hasonló a <code>dyplr</code> csomag <code>filter()</code> függvényéhez. Teszteljük a <span class="math inline">\(H_0:\mu_1=\mu_2\)</span> hipotézist.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.test</span>(<span class="fu">c</span>(<span class="fu">sum</span>(<span class="fu">subset</span>(car_insur, car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"male"</span>)<span class="sc">$</span>OUTCOME), <span class="co"># férfiak kárgyakorisága</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sum</span>(<span class="fu">subset</span>(car_insur, car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"female"</span>)<span class="sc">$</span>OUTCOME)), <span class="co"># nők kárgyakorisága</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>          <span class="fu">c</span>(<span class="fu">nrow</span>(<span class="fu">subset</span>(car_insur, car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"male"</span>)), <span class="co"># férfiak száma</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">nrow</span>(<span class="fu">subset</span>(car_insur, car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"female"</span>))) <span class="co"># nők száma</span></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.test</span>(<span class="fu">c</span>(<span class="fu">sum</span>(<span class="fu">subset</span>(car_insur, car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"male"</span>)<span class="sc">$</span>OUTCOME), <span class="co"># férfiak kárgyakorisága</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sum</span>(<span class="fu">subset</span>(car_insur, car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"female"</span>)<span class="sc">$</span>OUTCOME)), <span class="co"># nők kárgyakorisága</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>          <span class="fu">c</span>(<span class="fu">nrow</span>(<span class="fu">subset</span>(car_insur, car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"male"</span>)), <span class="co"># férfiak száma</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">nrow</span>(<span class="fu">subset</span>(car_insur, car_insur<span class="sc">$</span>GENDER<span class="sc">==</span><span class="st">"female"</span>))) <span class="co"># nők száma</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     2-sample test for equality of proportions with continuity correction
@@ -694,8 +707,8 @@ sample estimates:
 </ul>
 <p>A példánkban vizsgáljuk meg, hogy van-e összefüggés az vezetési tapasztalt és a kárgyakoriság között.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(car_insur<span class="sc">$</span>DRIVING_EXPERIENCE,</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>      car_insur<span class="sc">$</span>OUTCOME) <span class="co"># gyakorisági tábla</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(car_insur<span class="sc">$</span>DRIVING_EXPERIENCE,</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>      car_insur<span class="sc">$</span>OUTCOME) <span class="co"># gyakorisági tábla</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        
             0    1
@@ -704,8 +717,8 @@ sample estimates:
   20-29y 2010  109
   30y+   1032   20</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(car_insur<span class="sc">$</span>DRIVING_EXPERIENCE,</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>                 car_insur<span class="sc">$</span>OUTCOME))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(car_insur<span class="sc">$</span>DRIVING_EXPERIENCE,</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>                 car_insur<span class="sc">$</span>OUTCOME))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's Chi-squared test
@@ -736,14 +749,20 @@ X-squared = 2809.9, df = 3, p-value &lt; 2.2e-16</code></pre>
 <h2 data-number="5.1" class="anchored" data-anchor-id="eloszlások-ábrázolása"><span class="header-section-number">5.1</span> Eloszlások ábrázolása</h2>
 <p>A leggyakoribb ábrázolási lehetőség a <strong>hisztogram</strong> (diszkrét) és a <strong>sűrűségfüggvény</strong> (folytonos).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: dplyr</code></pre>
+<pre><code>Warning: a(z) 'ggplot2' csomag az R 4.5.3 verziójával lett fordítva</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: dplyr</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'dplyr' csomag az R 4.5.3 verziójával lett fordítva</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
-Attaching package: 'dplyr'</code></pre>
+Kapcsolódás csomaghoz: 'dplyr'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>The following objects are masked from 'package:stats':
@@ -755,11 +774,11 @@ Attaching package: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hisztogramm - speedig violations</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(SPEEDING_VIOLATIONS)) <span class="sc">+</span> <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hisztogramm - speedig violations</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(SPEEDING_VIOLATIONS)) <span class="sc">+</span> <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
@@ -768,9 +787,9 @@ Attaching package: 'dplyr'</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sűrűség - credit score</span></span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE)) <span class="sc">+</span> <span class="fu">geom_density</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sűrűség - credit score</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE)) <span class="sc">+</span> <span class="fu">geom_density</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 982 rows containing non-finite outside the scale range
 (`stat_density()`).</code></pre>
@@ -785,8 +804,8 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <p>A <code>ggplot2</code> keretein belül mindig lehetőség van kategóriák szerinti bontásra.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE, <span class="at">group=</span>AGE, <span class="at">fill =</span> AGE)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">alpha=</span><span class="fl">0.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE, <span class="at">group=</span>AGE, <span class="at">fill =</span> AGE)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">alpha=</span><span class="fl">0.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 982 rows containing non-finite outside the scale range
 (`stat_density()`).</code></pre>
@@ -804,8 +823,8 @@ Attaching package: 'dplyr'</code></pre>
 <h2 data-number="5.2" class="anchored" data-anchor-id="asszociáció-ábrázolása"><span class="header-section-number">5.2</span> Asszociáció ábrázolása</h2>
 <p>Asszociációt két kategorikus változó között tudunk megjeleníteni úgy, hogy gyakorlatilag a gyakoriságokat tartalmazó kereszttáblát vizualizáljuk. Legyen a két változó az iskolai végzettség és az income. Vegyük észere, hogy a módszer nincs korlátozva a kategóriák száma által.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>INCOME, <span class="at">group=</span>EDUCATION, <span class="at">fill=</span>EDUCATION)) <span class="sc">+</span> <span class="fu">geom_bar</span>() <span class="co"># egyszerű oszlopdiagramm</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>INCOME, <span class="at">group=</span>EDUCATION, <span class="at">fill=</span>EDUCATION)) <span class="sc">+</span> <span class="fu">geom_bar</span>() <span class="co"># egyszerű oszlopdiagramm</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -813,8 +832,8 @@ Attaching package: 'dplyr'</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>INCOME, <span class="at">group=</span>EDUCATION, <span class="at">fill=</span>EDUCATION)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">position=</span><span class="st">"fill"</span>) <span class="co"># 100% halmozott oszlopdiagramm</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>INCOME, <span class="at">group=</span>EDUCATION, <span class="at">fill=</span>EDUCATION)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">position=</span><span class="st">"fill"</span>) <span class="co"># 100% halmozott oszlopdiagramm</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -829,8 +848,8 @@ Attaching package: 'dplyr'</code></pre>
 <p>A vegyes kapcsolat vizualizációja nagyon hasonló az sűrűségfüggvények ábrázolásához, hiszen továbbra is folytonos változókat ábrázolunk, de külön kategóriánként tesszük mindezt. Az egy ábrán való megjelenít jelentősen megkönnyíti az elemzést.</p>
 <p>Egy hasznos, több információt is megjelenító ábra a hegedű diagramm, ami egyszerre képes elénk tárni a boxplot ábrát és a sűrűségfüggvény képét, mindezt összehasonlítható formában.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE, <span class="at">y=</span>AGE, <span class="at">fill=</span>AGE)) <span class="sc">+</span> <span class="fu">geom_violin</span>(<span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE, <span class="at">y=</span>AGE, <span class="at">fill=</span>AGE)) <span class="sc">+</span> <span class="fu">geom_violin</span>(<span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 982 rows containing non-finite outside the scale range
 (`stat_ydensity()`).</code></pre>
@@ -852,8 +871,8 @@ Attaching package: 'dplyr'</code></pre>
 <h2 data-number="5.4" class="anchored" data-anchor-id="korreláció-ábrázolása"><span class="header-section-number">5.4</span> Korreláció ábrázolása</h2>
 <p>A kétváltozós ábrák legtöbbször két folytonos változó terében mutatják meg az adatok sűrűsödését. Erre több lehetőség is kínálkozik, a leggyakrabban a pontdiagramm (felhődiagramm) alkalmazott. Sajnos itt csak két valóban numerikus változónk van, amely összehasonlítása nem feltétlenül értelmes. Ábrázoljuk a <em>credit_score</em> és az <em>annual_milage</em> változókat pontdiagrammon.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE, <span class="at">y=</span>ANNUAL_MILEAGE)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE, <span class="at">y=</span>ANNUAL_MILEAGE)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 1851 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
@@ -868,9 +887,9 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <p>Mindig van lehetőségünk valamilyen trendvonal felvételére, legyen az lineáris vagy simított, súlyozott (LOESS).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE, <span class="at">y=</span>ANNUAL_MILEAGE)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span> <span class="co"># lineáris trend</span></span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"loess"</span>, <span class="at">color=</span><span class="st">"blue"</span>) <span class="co"># simított, súlyozott</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>CREDIT_SCORE, <span class="at">y=</span>ANNUAL_MILEAGE)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span> <span class="co"># lineáris trend</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"loess"</span>, <span class="at">color=</span><span class="st">"blue"</span>) <span class="co"># simított, súlyozott</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
@@ -899,7 +918,7 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <p>Néha látványosabb hőtérképen megjeleníteni az adatokat, mert így még egy dimenziót gond nélkül tudunk ábrázolni.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>ANNUAL_MILEAGE, <span class="at">y=</span>SPEEDING_VIOLATIONS, <span class="at">fill=</span>CREDIT_SCORE)) <span class="sc">+</span> <span class="fu">geom_tile</span>() <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"green"</span>, <span class="at">high =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>car_insur <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>ANNUAL_MILEAGE, <span class="at">y=</span>SPEEDING_VIOLATIONS, <span class="at">fill=</span>CREDIT_SCORE)) <span class="sc">+</span> <span class="fu">geom_tile</span>() <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low=</span><span class="st">"green"</span>, <span class="at">high =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 957 rows containing missing values or values outside the scale range
 (`geom_tile()`).</code></pre>
@@ -1325,6 +1344,9 @@ Attaching package: 'dplyr'</code></pre>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./3_GLM.html" class="pagination-link" aria-label="Általánosított lineáris modellek (GLM)">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Általánosított lineáris modellek (GLM)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

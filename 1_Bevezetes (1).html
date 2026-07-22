@@ -192,12 +192,6 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Feltáró adatelemzés és adatvizualizáció</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./3_GLM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Általánosított lineáris modellek (GLM)</span></span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -577,16 +571,16 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x) <span class="co"># várható érték</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -0.01862925</code></pre>
+<pre><code>[1] 0.02215042</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(x) <span class="co"># szórás</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.021495</code></pre>
+<pre><code>[1] 0.9948052</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(x) <span class="co"># leíró statisztika</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
--3.070930 -0.731546  0.004952 -0.018629  0.642636  2.862005 </code></pre>
+<pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-2.89797 -0.64028 -0.01839  0.02215  0.70277  3.86537 </code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-important callout-titled" title="Véletlen változók">
@@ -710,20 +704,17 @@ window.Quarto = {
 </div>
 <p>A párbeszédablak magától értetődő. A beolvasás során a csomag megpróbálja felismerni az adattípust, amennyiben nem jól tette, úgy változtathatunk a változó nevére kattintva. Ügyeljünk rá, hogy gyakran előfordul, hogy külön oszlopot hoz létre a megfigyelés sorszámának. Amennyiben erre nincs szükségünk, úgy ugorjuk át ezt az oszlopot, azaz állítsuk <em>skip</em> értékre. A jobb alsó sarokban láthatjuk a generált kódot, amit akár ki is másolhatunk, de az import gombra kattintva is végrehajtódik a függvény.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr) <span class="co"># töltsük be a csomagot (előre van telepítve)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: a(z) 'readr' csomag az R 4.5.3 verziójával lett fordítva</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Iris_dataset.txt"</span>) <span class="co"># olvassuk be az adatokat</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr) <span class="co"># töltsük be a csomagot (előre van telepítve)</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Iris_dataset.txt"</span>) <span class="co"># olvassuk be az adatokat</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 150 Columns: 5
-── Column specification ────────────────────────────────────────────────────────
+-- Column specification --------------------------------------------------------
 Delimiter: ","
 chr (1): Species
 dbl (4): Sepal.Length, Sepal.Width, Petal.Length, Petal.Width
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+i Use `spec()` to retrieve the full column specification for this data.
+i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 </div>
 <p>Ugyanezen az elvan működik az .xlsx (File -&gt; Import Dataset -&gt; From Excel) vagy a .csv (itt ugyanúgy a fentebb ismertetett From Text menüpontra van szükség) fájlok betöltése.</p>
@@ -737,13 +728,10 @@ dbl (4): Sepal.Length, Sepal.Width, Petal.Length, Petal.Width
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="select"><span class="header-section-number">5.2.1</span> <code>select()</code></h3>
 <p>Ez a művelet a változók (oszlopok) egy részhalmazának kiválasztását végzi el. A változók nevét nem kell idézőjelbe tenni.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># töltsük be a csomagot</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: a(z) 'dplyr' csomag az R 4.5.3 verziójával lett fordítva</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># töltsük be a csomagot</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
-Kapcsolódás csomaghoz: 'dplyr'</code></pre>
+Attaching package: 'dplyr'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>The following objects are masked from 'package:stats':
@@ -755,9 +743,9 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(iris, Sepal.Length, Sepal.Width) <span class="co"># a szirom hosszúság és szélesség kiválasztása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(iris, Sepal.Length, Sepal.Width) <span class="co"># a szirom hosszúság és szélesség kiválasztása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 150 × 2
+<pre><code># A tibble: 150 x 2
    Sepal.Length Sepal.Width
           &lt;dbl&gt;       &lt;dbl&gt;
  1          5.1         3.5
@@ -770,13 +758,13 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
  8          5           3.4
  9          4.4         2.9
 10          4.9         3.1
-# ℹ 140 more rows</code></pre>
+# i 140 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ugyanez %&gt;% operátorral</span></span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sepal.Length, Sepal.Width)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ugyanez %&gt;% operátorral</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sepal.Length, Sepal.Width)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 150 × 2
+<pre><code># A tibble: 150 x 2
    Sepal.Length Sepal.Width
           &lt;dbl&gt;       &lt;dbl&gt;
  1          5.1         3.5
@@ -789,11 +777,11 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
  8          5           3.4
  9          4.4         2.9
 10          4.9         3.1
-# ℹ 140 more rows</code></pre>
+# i 140 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(iris, <span class="sc">-</span>Species, <span class="sc">-</span>Petal.Length) <span class="co"># változók kihagyása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(iris, <span class="sc">-</span>Species, <span class="sc">-</span>Petal.Length) <span class="co"># változók kihagyása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 150 × 3
+<pre><code># A tibble: 150 x 3
    Sepal.Length Sepal.Width Petal.Width
           &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
  1          5.1         3.5         0.2
@@ -806,11 +794,11 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
  8          5           3.4         0.2
  9          4.4         2.9         0.2
 10          4.9         3.1         0.1
-# ℹ 140 more rows</code></pre>
+# i 140 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(iris, <span class="fu">contains</span>(<span class="st">"Petal"</span>)) <span class="co"># a "Petal" karakterláncot tartalmazó változónevek kiválasztása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(iris, <span class="fu">contains</span>(<span class="st">"Petal"</span>)) <span class="co"># a "Petal" karakterláncot tartalmazó változónevek kiválasztása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 150 × 2
+<pre><code># A tibble: 150 x 2
    Petal.Length Petal.Width
           &lt;dbl&gt;       &lt;dbl&gt;
  1          1.4         0.2
@@ -823,7 +811,7 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
  8          1.5         0.2
  9          1.4         0.2
 10          1.5         0.1
-# ℹ 140 more rows</code></pre>
+# i 140 more rows</code></pre>
 </div>
 </div>
 <p>A <code>contains()</code> függvény helyett értelemszerűen alkalmazhatók a ‘starts_with’, ‘ends_with’ és a <code>matches()</code> függvények is.</p>
@@ -832,9 +820,9 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
 <h3 data-number="5.2.2" class="anchored" data-anchor-id="filter"><span class="header-section-number">5.2.2</span> <code>filter()</code></h3>
 <p>Megfigyelések (sorok) kiválasztásához egy adott kritérium alapján használjuk a <code>filter()</code> függvényt.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(iris, Species <span class="sc">==</span> <span class="st">"setosa"</span>) <span class="co"># csak a "setosa" fajta kiválasztás</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(iris, Species <span class="sc">==</span> <span class="st">"setosa"</span>) <span class="co"># csak a "setosa" fajta kiválasztás</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 50 × 5
+<pre><code># A tibble: 50 x 5
    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
  1          5.1         3.5          1.4         0.2 setosa 
@@ -847,13 +835,13 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
  8          5           3.4          1.5         0.2 setosa 
  9          4.4         2.9          1.4         0.2 setosa 
 10          4.9         3.1          1.5         0.1 setosa 
-# ℹ 40 more rows</code></pre>
+# i 40 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ugyanez %&gt;% operátorral</span></span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species<span class="sc">==</span><span class="st">"setosa"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ugyanez %&gt;% operátorral</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Species<span class="sc">==</span><span class="st">"setosa"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 50 × 5
+<pre><code># A tibble: 50 x 5
    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
  1          5.1         3.5          1.4         0.2 setosa 
@@ -866,11 +854,11 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
  8          5           3.4          1.5         0.2 setosa 
  9          4.4         2.9          1.4         0.2 setosa 
 10          4.9         3.1          1.5         0.1 setosa 
-# ℹ 40 more rows</code></pre>
+# i 40 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(iris, Species <span class="sc">==</span> <span class="st">"setosa"</span> <span class="sc">|</span> Species <span class="sc">==</span> <span class="st">"virginica"</span>) <span class="co"># "setosa" vagy "virginica" típusok kiválasztása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(iris, Species <span class="sc">==</span> <span class="st">"setosa"</span> <span class="sc">|</span> Species <span class="sc">==</span> <span class="st">"virginica"</span>) <span class="co"># "setosa" vagy "virginica" típusok kiválasztása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 100 × 5
+<pre><code># A tibble: 100 x 5
    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
  1          5.1         3.5          1.4         0.2 setosa 
@@ -883,11 +871,11 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
  8          5           3.4          1.5         0.2 setosa 
  9          4.4         2.9          1.4         0.2 setosa 
 10          4.9         3.1          1.5         0.1 setosa 
-# ℹ 90 more rows</code></pre>
+# i 90 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(iris, Species <span class="sc">==</span> <span class="st">"setosa"</span> <span class="sc">&amp;</span> Sepal.Length <span class="sc">&lt;</span> <span class="dv">5</span>) <span class="co"># 5mm-nél kisebb szirmú "setosa" típus kiválasztása (ÉS)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(iris, Species <span class="sc">==</span> <span class="st">"setosa"</span> <span class="sc">&amp;</span> Sepal.Length <span class="sc">&lt;</span> <span class="dv">5</span>) <span class="co"># 5mm-nél kisebb szirmú "setosa" típus kiválasztása (ÉS)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 20 × 5
+<pre><code># A tibble: 20 x 5
    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
  1          4.9         3            1.4         0.2 setosa 
@@ -914,12 +902,12 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
 </div>
 <p>Több függvényt a <code>%&gt;%</code> könnyen egymásba ágyazhatunk.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Sepal.Length <span class="sc">&lt;</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co"># 5mm-nél kisebb szirom</span></span>
-<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Sepal.Width, Sepal.Length, Species) <span class="sc">%&gt;%</span> <span class="co"># csak ezek a változók</span></span>
-<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(<span class="dv">4</span>) <span class="co"># csak az első négy megfigyelés kiíratása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Sepal.Length <span class="sc">&lt;</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co"># 5mm-nél kisebb szirom</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Sepal.Width, Sepal.Length, Species) <span class="sc">%&gt;%</span> <span class="co"># csak ezek a változók</span></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(<span class="dv">4</span>) <span class="co"># csak az első négy megfigyelés kiíratása</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 3
+<pre><code># A tibble: 4 x 3
   Sepal.Width Sepal.Length Species
         &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;  
 1         3            4.9 setosa 
@@ -933,12 +921,12 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
 <h3 data-number="5.2.3" class="anchored" data-anchor-id="mutate"><span class="header-section-number">5.2.3</span> <code>mutate()</code></h3>
 <p>A <code>mutate()</code> függvénnyel új változót adhatunk az adattáblánkhoz. Ez gyakran elő fog fordulni adatmanipuláció során, mert sok esetben segédváltozóra van szükség egy-egy bonyolultabb kimutatás előállításához. Ellátsuk elő például az értékek arányait.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Petal.Shape =</span> Petal.Width <span class="sc">/</span> Petal.Length,</span>
-<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">Sepal.Shape =</span> Sepal.Width <span class="sc">/</span> Sepal.Length) <span class="sc">%&gt;%</span> </span>
-<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Species, Petal.Shape, Sepal.Shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Petal.Shape =</span> Petal.Width <span class="sc">/</span> Petal.Length,</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">Sepal.Shape =</span> Sepal.Width <span class="sc">/</span> Sepal.Length) <span class="sc">%&gt;%</span> </span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Species, Petal.Shape, Sepal.Shape)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 150 × 3
+<pre><code># A tibble: 150 x 3
    Species Petal.Shape Sepal.Shape
    &lt;chr&gt;         &lt;dbl&gt;       &lt;dbl&gt;
  1 setosa       0.143        0.686
@@ -951,7 +939,7 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
  8 setosa       0.133        0.68 
  9 setosa       0.143        0.659
 10 setosa       0.0667       0.633
-# ℹ 140 more rows</code></pre>
+# i 140 more rows</code></pre>
 </div>
 </div>
 </section>
@@ -965,11 +953,11 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
 </ul>
 <p>A <code>dplyr</code> ezt nagyon egyszerűvé teszi a group_by és <code>summarize</code> függvények használatával. A group_by minden csoportot egyetlen soros összefoglalóvá csuk össze. Argumentumként azokat az oszlopneveket veszi, amelyek azokat a <strong>kategorikus (faktor)</strong> változókat tartalmazzák, amelyekre az összefoglaló statisztikákat ki szeretnénk számítani.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
-<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span> </span>
-<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">Mean.Petal.Length =</span> <span class="fu">mean</span>(Petal.Length)) <span class="co"># átlagos hossz kiszámítása fajonként</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span> </span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">Mean.Petal.Length =</span> <span class="fu">mean</span>(Petal.Length)) <span class="co"># átlagos hossz kiszámítása fajonként</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 2
+<pre><code># A tibble: 3 x 2
   Species    Mean.Petal.Length
   &lt;chr&gt;                  &lt;dbl&gt;
 1 setosa                  1.46
@@ -979,31 +967,27 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
 </div>
 <p>Több összefoglaló statisztikát is számíthatunk.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
-<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Petal.Long =</span> Petal.Length <span class="sc">&gt;</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co"># új változó, ami logikai érték (egy "=" jel), eldönti, hogy az állítás igaz-e, vagy hamis</span></span>
-<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Species, Petal.Long) <span class="sc">%&gt;%</span> <span class="co"># fajok és az előbb létrehozott logikai változó alapján csoportosítunk</span></span>
-<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">Mean.Petal.Length =</span> <span class="fu">mean</span>(Petal.Length), <span class="co"># csoportátlag</span></span>
-<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">n.Petals =</span> <span class="fu">length</span>(Petal.Length), <span class="co"># elemszám</span></span>
-<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">sd.Petal.Length =</span> <span class="fu">sd</span>(Petal.Length), <span class="co"># szőrás</span></span>
-<span id="cb97-7"><a href="#cb97-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">SE.Petal.Length =</span> <span class="fu">sd</span>(Petal.Length) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(Petal.Length))) <span class="co"># relatív hiba</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Petal.Long =</span> Petal.Length <span class="sc">&gt;</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span> <span class="co"># új változó, ami logikai érték (egy "=" jel), eldönti, hogy az állítás igaz-e, vagy hamis</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Species, Petal.Long) <span class="sc">%&gt;%</span> <span class="co"># fajok és az előbb létrehozott logikai változó alapján csoportosítunk</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">Mean.Petal.Length =</span> <span class="fu">mean</span>(Petal.Length), <span class="co"># csoportátlag</span></span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">n.Petals =</span> <span class="fu">length</span>(Petal.Length), <span class="co"># elemszám</span></span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">sd.Petal.Length =</span> <span class="fu">sd</span>(Petal.Length), <span class="co"># szőrás</span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">SE.Petal.Length =</span> <span class="fu">sd</span>(Petal.Length) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(Petal.Length))) <span class="co"># relatív hiba</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has regrouped the output.
-ℹ Summaries were computed grouped by Species and Petal.Long.
-ℹ Output is grouped by Species.
-ℹ Use `summarise(.groups = "drop_last")` to silence this message.
-ℹ Use `summarise(.by = c(Species, Petal.Long))` for per-operation grouping
-  (`?dplyr::dplyr_by`) instead.</code></pre>
+<pre><code>`summarise()` has grouped output by 'Species'. You can override using the
+`.groups` argument.</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 6
+<pre><code># A tibble: 5 x 6
 # Groups:   Species [3]
   Species  Petal.Long Mean.Petal.Length n.Petals sd.Petal.Length SE.Petal.Length
   &lt;chr&gt;    &lt;lgl&gt;                  &lt;dbl&gt;    &lt;int&gt;           &lt;dbl&gt;           &lt;dbl&gt;
 1 setosa   FALSE                   1.46       50           0.174          0.0245
-2 versico… FALSE                   4.24       49           0.459          0.0655
-3 versico… TRUE                    5.1         1          NA             NA     
-4 virgini… FALSE                   4.87        9           0.158          0.0527
-5 virgini… TRUE                    5.70       41           0.489          0.0764</code></pre>
+2 versico~ FALSE                   4.24       49           0.459          0.0655
+3 versico~ TRUE                    5.1         1          NA             NA     
+4 virgini~ FALSE                   4.87        9           0.158          0.0527
+5 virgini~ TRUE                    5.70       41           0.489          0.0764</code></pre>
 </div>
 </div>
 </section>
@@ -1011,15 +995,15 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
 <h3 data-number="5.2.5" class="anchored" data-anchor-id="arrange"><span class="header-section-number">5.2.5</span> <code>arrange()</code></h3>
 <p>Gyakran előfordul, hogy a sorokat rendezni szeretnénk csökkenő vagy növekvő sorrendben. A <code>dplyr</code> segítségével ez elegánsan elvégezhető, de természetesen alkalmazható a <code>sort()</code> függvény is, ami az alapcsomag része.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
-<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span> </span>
-<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">Mean.Petal.Length =</span> <span class="fu">mean</span>(Petal.Length),</span>
-<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">n.Petals =</span> <span class="fu">length</span>(Petal.Length),</span>
-<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">sd.Petal.Length =</span> <span class="fu">sd</span>(Petal.Length),</span>
-<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">SE.Petal.Length =</span> <span class="fu">sd</span>(Petal.Length) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(Petal.Length))) <span class="sc">%&gt;%</span> </span>
-<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="sc">-</span>Mean.Petal.Length) <span class="co"># csökkenő sorrend a negatív jel miatt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> </span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span> </span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">Mean.Petal.Length =</span> <span class="fu">mean</span>(Petal.Length),</span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">n.Petals =</span> <span class="fu">length</span>(Petal.Length),</span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">sd.Petal.Length =</span> <span class="fu">sd</span>(Petal.Length),</span>
+<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">SE.Petal.Length =</span> <span class="fu">sd</span>(Petal.Length) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(Petal.Length))) <span class="sc">%&gt;%</span> </span>
+<span id="cb97-7"><a href="#cb97-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="sc">-</span>Mean.Petal.Length) <span class="co"># csökkenő sorrend a negatív jel miatt</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 5
+<pre><code># A tibble: 3 x 5
   Species    Mean.Petal.Length n.Petals sd.Petal.Length SE.Petal.Length
   &lt;chr&gt;                  &lt;dbl&gt;    &lt;int&gt;           &lt;dbl&gt;           &lt;dbl&gt;
 1 virginica               5.55       50           0.552          0.0780
@@ -1033,9 +1017,9 @@ Kapcsolódás csomaghoz: 'dplyr'</code></pre>
 <p>A kereszttábla készítés meglehetősen bonyolult művelet minden szoftverben, különösen, ha előtte még szükség van valamilyen adatmanipulációra. Egy kereszttáblában jellemzően két faktorváltozó metszetében a gyakoriság jelenik meg. Amennyiben megvan a két faktorváltozónk úgy nem bonyolult a dolog, ha nincs, akkor elő kell állítani.</p>
 <p>Az <code>xtabs()</code> és <code>table()</code> két előre beépített függvény, amelyek azért jók, mert későbbiekben a statisztikai függvényeket ezeket jellemzően el szokták fogadni inputként. Fontos azonban, hogy ez a kettő elemi függvény, ezért <code>%&gt;%</code> operátorral nem mindig tudnak kapcsolódni. Legtöbbször csupán a <code>data=.</code> paraméterrel jelezni kell, hogy korábban már megadtuk az adatok forrását.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
-<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Petal.Long =</span> Petal.Length <span class="sc">&gt;</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xtabs</span>(<span class="sc">~</span> Species <span class="sc">+</span> Petal.Long, <span class="at">data=</span>.)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Petal.Long =</span> Petal.Length <span class="sc">&gt;</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xtabs</span>(<span class="sc">~</span> Species <span class="sc">+</span> Petal.Long, <span class="at">data=</span>.)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Petal.Long
 Species      FALSE TRUE
@@ -1046,10 +1030,10 @@ Species      FALSE TRUE
 </div>
 <p>A <code>table()</code> az egyik legelemibb belső függvény, sajnos gyakran gyorsabban eredményhez jutunk, ha külön változóként elmentjük a módosított adattáblát, majd erre hivatkozva kérjük le a kereszttáblát.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>iris2 <span class="ot">&lt;-</span> iris <span class="sc">%&gt;%</span></span>
-<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Petal.Long =</span> Petal.Length <span class="sc">&gt;</span> <span class="dv">5</span>)</span>
-<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(iris2<span class="sc">$</span>Species, iris2<span class="sc">$</span>Petal.Long)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>iris2 <span class="ot">&lt;-</span> iris <span class="sc">%&gt;%</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Petal.Long =</span> Petal.Length <span class="sc">&gt;</span> <span class="dv">5</span>)</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(iris2<span class="sc">$</span>Species, iris2<span class="sc">$</span>Petal.Long)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            
              FALSE TRUE
