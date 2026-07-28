@@ -2,16 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Általánosított lineáris modellek (GLM) – GLM alapú többváltozós statisztikai modellek biztosítási alkalmazásokkal</title>
+<title>GLM alapú többváltozós statisztikai modellek biztosítási alkalmazásokkal - 3&nbsp; Általánosított lineáris modellek (GLM)</title>
 <style>
-/* Default styles provided by pandoc.
-** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -22,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -34,29 +65,22 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./2_EDA.html" rel="prev">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-9e3e5b9121e68b3f077afb32f2c64d95.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
+  "limit": 20,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -65,58 +89,30 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3_GLM.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Általánosított lineáris modellek (GLM)</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3_GLM.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Általánosított lineáris modellek (GLM)</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -125,7 +121,7 @@ window.Quarto = {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">GLM alapú többváltozós statisztikai modellek biztosítási alkalmazásokkal</a> 
@@ -165,7 +161,7 @@ window.Quarto = {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -185,6 +181,32 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#normális-eloszlás" id="toc-normális-eloszlás" class="nav-link" data-scroll-target="#normális-eloszlás"><span class="header-section-number">5.4.1</span> Normális eloszlás</a></li>
   <li><a href="#gamma-eloszlás" id="toc-gamma-eloszlás" class="nav-link" data-scroll-target="#gamma-eloszlás"><span class="header-section-number">5.4.2</span> Gamma eloszlás</a></li>
+  </ul></li>
+  <li><a href="#együtthatók-becslése" id="toc-együtthatók-becslése" class="nav-link" data-scroll-target="#együtthatók-becslése"><span class="header-section-number">5.5</span> Együtthatók becslése</a>
+  <ul class="collapse">
+  <li><a href="#bevezetés-a-likelihood-alapú-becslésekbe" id="toc-bevezetés-a-likelihood-alapú-becslésekbe" class="nav-link" data-scroll-target="#bevezetés-a-likelihood-alapú-becslésekbe"><span class="header-section-number">5.5.1</span> Bevezetés a likelihood alapú becslésekbe</a></li>
+  <li><a href="#fisher-információ" id="toc-fisher-információ" class="nav-link" data-scroll-target="#fisher-információ"><span class="header-section-number">5.5.2</span> Fisher információ</a></li>
+  </ul></li>
+  <li><a href="#regressziós-kioefficiensek-becslése" id="toc-regressziós-kioefficiensek-becslése" class="nav-link" data-scroll-target="#regressziós-kioefficiensek-becslése"><span class="header-section-number">5.6</span> Regressziós kioefficiensek becslése</a></li>
+  <li><a href="#diagnisztikai-mutatók" id="toc-diagnisztikai-mutatók" class="nav-link" data-scroll-target="#diagnisztikai-mutatók"><span class="header-section-number">5.7</span> Diagnisztikai mutatók</a>
+  <ul class="collapse">
+  <li><a href="#cook-távolság" id="toc-cook-távolság" class="nav-link" data-scroll-target="#cook-távolság"><span class="header-section-number">5.7.1</span> Cook-távolság</a></li>
+  <li><a href="#leverage-érték" id="toc-leverage-érték" class="nav-link" data-scroll-target="#leverage-érték"><span class="header-section-number">5.7.2</span> Leverage érték</a></li>
+  </ul></li>
+  <li><a href="#bináris-és-binomiális-függő-változók-becslése" id="toc-bináris-és-binomiális-függő-változók-becslése" class="nav-link" data-scroll-target="#bináris-és-binomiális-függő-változók-becslése"><span class="header-section-number">5.8</span> Bináris és binomiális függő változók becslése</a>
+  <ul class="collapse">
+  <li><a href="#probit-modell" id="toc-probit-modell" class="nav-link" data-scroll-target="#probit-modell"><span class="header-section-number">5.8.1</span> Probit modell</a></li>
+  <li><a href="#logit-modell" id="toc-logit-modell" class="nav-link" data-scroll-target="#logit-modell"><span class="header-section-number">5.8.2</span> Logit modell</a></li>
+  </ul></li>
+  <li><a href="#modellek-diszkrét-eloszlásokra" id="toc-modellek-diszkrét-eloszlásokra" class="nav-link" data-scroll-target="#modellek-diszkrét-eloszlásokra"><span class="header-section-number">5.9</span> Modellek diszkrét eloszlásokra</a>
+  <ul class="collapse">
+  <li><a href="#log-lineáris-poisson-modell" id="toc-log-lineáris-poisson-modell" class="nav-link" data-scroll-target="#log-lineáris-poisson-modell"><span class="header-section-number">5.9.1</span> Log-lineáris Poisson modell</a></li>
+  </ul></li>
+  <li><a href="#modell-illeszkedés-értékelése-és-a-béta-koefficiensek-tesztelése" id="toc-modell-illeszkedés-értékelése-és-a-béta-koefficiensek-tesztelése" class="nav-link" data-scroll-target="#modell-illeszkedés-értékelése-és-a-béta-koefficiensek-tesztelése"><span class="header-section-number">5.10</span> Modell illeszkedés értékelése és a béta koefficiensek tesztelése</a></li>
+  <li><a href="#túlszóródás" id="toc-túlszóródás" class="nav-link" data-scroll-target="#túlszóródás"><span class="header-section-number">5.11</span> Túlszóródás</a>
+  <ul class="collapse">
+  <li><a href="#a-túlszóródás-okai" id="toc-a-túlszóródás-okai" class="nav-link" data-scroll-target="#a-túlszóródás-okai"><span class="header-section-number">5.11.1</span> A túlszóródás okai</a></li>
+  <li><a href="#kvázi-likelihood-modellek" id="toc-kvázi-likelihood-modellek" class="nav-link" data-scroll-target="#kvázi-likelihood-modellek"><span class="header-section-number">5.11.2</span> Kvázi-likelihood modellek</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -208,9 +230,7 @@ window.Quarto = {
   </div>
   
 
-
 </header>
-
 
 <section id="miről-lesz-szó-a-fejezetben" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Miről lesz szó a fejezetben?</h1>
@@ -270,7 +290,7 @@ Var(\hat{\beta})=\sigma^2(X^T X)^{-1}
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Az exponenciális családba tartozó eloszlások általános alakja
+Az exponenciális családba tartozó eloszlások általános alakja
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -306,7 +326,7 @@ var(y_i|x_i)=\sigma^2(\mu_i)=\phi \upsilon (\mu_i) / \omega_i
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>A leggyakrabban alkalmazott link függvények
+A leggyakrabban alkalmazott link függvények
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -367,66 +387,857 @@ f(y)=\text{exp}\left\{(-\alpha) \frac {y} {\mu}\right\}
 \theta=\eta=-\frac{1} {\mu}
 \]</span></p>
 <p>Vagyis a helyes kanonikus link függvény az inverz.</p>
+</section>
+</section>
+<section id="együtthatók-becslése" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="együtthatók-becslése"><span class="header-section-number">5.5</span> Együtthatók becslése</h2>
+<section id="bevezetés-a-likelihood-alapú-becslésekbe" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="bevezetés-a-likelihood-alapú-becslésekbe"><span class="header-section-number">5.5.1</span> Bevezetés a likelihood alapú becslésekbe</h3>
+<p>Ismeretes, hogy minden nevezetés eloszlás legtöbbször valamilyen helyparaméterrel és skálaparaméterrel adott. Amennyiben sejtjük, hogy milyen eloszlással van dolgunk, de nem ismerjük egyetlen paraméterét sem, viszont van véletlen mindevételből származó i.i.d. mintánk, akkor becslés adható az ismeretlen paraméterek értékére.</p>
+<p>Legyen tehát <span class="math inline">\(y_1, y_2, \dots, y_n \in Y\)</span> egy ismert eloszlásból, de ismeretlen <span class="math inline">\(\theta\)</span> paraméterrel. Ekkor a likelihood függvényünk:</p>
+<p><span class="math display">\[
+L_Y(\theta,y)=f_y(y, \theta)
+\]</span></p>
+<p>Vagyis ismervén a mintánkat, és sejtvén a háttéreloszlást, úgy milyen eséllyel kaptuk meg azt a véletlen mintát, ami éppen a birtokunkban van?</p>
+<div class="callout callout-style-default callout-important callout-titled" title="A likelihood függvények egy tulajdonsága">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+A likelihood függvények egy tulajdonsága
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A likelihoodokat mindig a sűrűségfüggvényekből becsüljük, azonban <span class="math inline">\(L_Y(\theta,y) \neq 1\)</span>!</p>
+</div>
+</div>
+<p><span class="math inline">\(\theta\)</span> paraméternek végtelen sok értéke lehetséges (ez minta konstellációról minta konstellációra változik) azonban minden lehetséges <span class="math inline">\(\theta\)</span> értékhez rendelhető egy valószínűség. Ismervén legalább egy mintát, úgy maximalizálva a valószínűségeket, megállapítható <span class="math inline">\(\theta\)</span> legvalószínűbb értéke.</p>
+<p>Minden <span class="math inline">\(y_i\)</span>-hez rendelhető egy egyedi <span class="math inline">\(L_y(\theta,y_i)\)</span> likelihood függvény, ami praktikusan <span class="math inline">\(y_i\)</span> mintába kerülési esélyét mutatja meg. Ezért</p>
+<p><span class="math display">\[
+L_Y(\theta,y)=\prod_i^n L_Y(\theta,y_i)
+\]</span></p>
+<p>Kihasználva a logaritmus függvény monotonitásának azonosságát a log likelihood függvényt:</p>
+<p><span class="math display">\[
+\text{ln }L_Y(\theta, y)=\sum_i^n \ell_Y(\theta,y)
+\]</span></p>
+<section id="a-score-függvény" class="level4" data-number="5.5.1.1">
+<h4 data-number="5.5.1.1" class="anchored" data-anchor-id="a-score-függvény"><span class="header-section-number">5.5.1.1</span> A score függvény</h4>
+<p>Azt a <span class="math inline">\(\theta\)</span> értéket választjuk, amely mellett a kapott mintánk a lehető legnagyobb valószínűség mellett előáll. Ez egy maximalizálási feladatot indukál, ami feltételezi a likelihood függvény differenciálhatóságát <span class="math inline">\(\theta\)</span> szerint. A likelihood függvény első deriváltja a score:</p>
+<p><span class="math display">\[
+s_Y(\theta,y)=\frac {\partial \ell_Y} {\partial \theta}(\ell_Y(\theta, y))
+\]</span></p>
+<p>A score várható értéke nulla, és ez a szélőérték keresés kritériuma is egyben.</p>
+</section>
+</section>
+<section id="fisher-információ" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="fisher-információ"><span class="header-section-number">5.5.2</span> Fisher információ</h3>
+<p>Ha a likelihood függvény első deriváltjának négyzetének várható értéke az úgynevezett <strong>Fisher információ</strong>:</p>
+<p><span class="math display">\[
+I_Y=E \left[\frac {\partial \ell_Y} {\partial \theta} \ell_Y(\theta,y)^2 \right]
+\]</span></p>
+<p>Az információ megmutatja, hogy egy becslésünk <span class="math inline">\(\theta\)</span> paraméterre vonatkozóan mekkora információt tartalmaz, azaz mennyire megbízható. Ha <span class="math inline">\(I_Y\)</span> értéke alacsony, akkor becslésünk kevésbé jó. Fontos tudni, hogy <strong>R</strong> az Fisher információ inverzét közli.</p>
+</section>
+</section>
+<section id="regressziós-kioefficiensek-becslése" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="regressziós-kioefficiensek-becslése"><span class="header-section-number">5.6</span> Regressziós kioefficiensek becslése</h2>
+<p>A klasszikus lineáris regresszió megoldási módja az általánosított modellek esetén nem járható út. Ugyanakkor a likelihood elv használatával torzítatlan becslések adhatók az ismeretlen koefficensekre.</p>
+<p>Legyen <span class="math inline">\(y_1, y_2, \dots, y_n\)</span> függő változó és <span class="math inline">\(z_1, z_2, \dots, z_n\)</span> dizájn vektor (vagy az ezzel egyenértékű <span class="math inline">\(x_1, x_2, \dots, x_n\)</span> kovariánsok). Egy <span class="math inline">\(E(y_i|x_i)=\mu_i=h(z_i^{'}\beta)\)</span> feltételes várható érték feladatban találhatő <span class="math inline">\(\beta\)</span> vektor maximum likelihood becslése (MLE) a likelihood vektor maximalizálásán alapul.</p>
+<p>Először tegyük fel, hogy <span class="math inline">\(\phi\)</span> skálaparaméter ismert. Miután ez a paraméter a likelihood része, ezért kanonikus alakban <span class="math inline">\(\phi=1\)</span> értékre állítható.</p>
+<p>Az általánosított sűrűségfüggvény log-likelihood alakja a következő:</p>
+<p><span class="math display">\[
+\ell_i(\theta_i)=\text{log}f(y_i|\theta_i, \phi, \omega_i)=\frac {y_i\theta_i-b(\theta_i)} {\phi}\omega_i
+\]</span></p>
+<p>Ismervén a <span class="math inline">\(\theta_i=\theta(\mu_i)\)</span> kapcsolatot, behelyettesítéssel adódik, hogy</p>
+<p><span class="math display">\[
+\ell_i(\mu_i)=\frac {y_i\theta_i-b(\theta_i)} {\phi}\omega_i
+\]</span></p>
+<p>Végül szintén felhasználva, hogy <span class="math inline">\(\mu_i=h(z_i^{'}\beta)\)</span> behelyettesítéssel adódik, hogy</p>
+<p><span class="math display">\[
+\ell_i(\beta)=\ell_i(h(z_i^{'}\beta))
+\]</span></p>
+<p>Mivel <span class="math inline">\(y_i \in Y\)</span> i.i.d. megfigyelések, ezért mindegyik <span class="math inline">\(y_i\)</span> egy egyedi hozzájárulásnak tekinthető <span class="math inline">\(\beta\)</span> értékéhez, amelyből következik, hogy</p>
+<p><span class="math display">\[
+\ell(\beta)=\sum_i^n \ell_i(\beta)
+\]</span></p>
+<p>A likelhood függvény első <span class="math inline">\(\beta\)</span> szerinti parciális deriváltja adja meg a score függvényt:</p>
+<p><span class="math display">\[
+s(\beta)=\frac {\partial \ell} {\partial \beta}=\sum_i^n s_i (\beta)
+\]</span></p>
+<p>Az egyedi score függvény hozzájárulások pedig:</p>
+<p><span class="math display">\[
+s_i(\beta)=z_i D_i(\beta) \sigma_i^{2}(\beta)[y_i-\mu_i(\beta)]
+\]</span></p>
+<p>ahol,</p>
+<p><span class="math inline">\(\mu_i(\beta)=h(z_i^{'}\beta)\)</span></p>
+<p><span class="math inline">\(\sigma_i^2=\upsilon(h(z_i^{'}\beta))\phi \times \omega_i^{-1}\)</span></p>
+<p><span class="math inline">\(D_i(\beta)=\frac {\partial h(z_i^{'}\beta)} {\partial \eta}\)</span></p>
+<p>A várható <em>Fisher információs mátrix</em> pedig</p>
+<p><span class="math display">\[
+F(\beta)=\text{cov }s(\beta)=\sum_i^n F_i(\beta)
+\]</span></p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Példa GLM modell gamma eloszlásra">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Példa GLM modell gamma eloszlásra
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Használjuk a <em>car_insur</em> adatbázist. Biztosítási adatokban leggyakrabban a díjak követnek Gamma eloszlást, mivel ha nem is a nullánál, de alulról mindenképpen korlátos adatokról van szó, amelyek gyakran balra erősen ferdék. Az adatbázisban sajnos nem szerepel a kiszabott díj így készítsünk egy szintetikus gamma eloszlású díj változót.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'dplyr' csomag az R 4.6.1 verziójával lett fordítva</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Kapcsolódás csomaghoz: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/car_insur.RData"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Beállítjuk a véletlenszám-generátort a reprodukálhatóságért</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>car_insur <span class="ot">&lt;-</span> car_insur <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. Alapdíj (Base Rate) pl. 50 000 Ft / tetszőleges pénznem</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">base_rate =</span> <span class="dv">50000</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. Multiplikatív kockázati tényezők (Relatív súlyok)</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Vezetési tapasztalat szorzója (a kezdők lényegesen többet fizetnek)</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">exp_factor =</span> <span class="fu">case_when</span>(</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      DRIVING_EXPERIENCE <span class="sc">==</span> <span class="st">"0-9y"</span>   <span class="sc">~</span> <span class="fl">1.8</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      DRIVING_EXPERIENCE <span class="sc">==</span> <span class="st">"10-19y"</span> <span class="sc">~</span> <span class="fl">1.3</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      DRIVING_EXPERIENCE <span class="sc">==</span> <span class="st">"20-29y"</span> <span class="sc">~</span> <span class="fl">1.0</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      DRIVING_EXPERIENCE <span class="sc">==</span> <span class="st">"30y+"</span>   <span class="sc">~</span> <span class="fl">0.8</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="fl">1.0</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Évjárat szorzója (újabb autó = drágább alkatrész/javítás)</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">year_factor =</span> <span class="fu">if_else</span>(VEHICLE_YEAR <span class="sc">==</span> <span class="st">"after 2015"</span>, <span class="fl">1.25</span>, <span class="fl">1.0</span>),</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Baleseti múlt és szabálytalanságok (minden egyes eset növeli a díjat)</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">accident_factor =</span> <span class="dv">1</span> <span class="sc">+</span> (PAST_ACCIDENTS <span class="sc">*</span> <span class="fl">0.15</span>) <span class="sc">+</span> (SPEEDING_VIOLATIONS <span class="sc">*</span> <span class="fl">0.05</span>),</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Éves futásteljesítmény hatása (kisebb korrekció)</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">mileage_factor =</span> <span class="dv">1</span> <span class="sc">+</span> (ANNUAL_MILEAGE <span class="sc">/</span> <span class="dv">100000</span>),</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. A "valódi" elméleti várható érték (mu)</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">mu_true =</span> base_rate <span class="sc">*</span> exp_factor <span class="sc">*</span> year_factor <span class="sc">*</span> accident_factor <span class="sc">*</span> mileage_factor,</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. Reális zaj hozzáadása Gamma eloszlással:</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A Gamma(shape, scale) várható értéke = shape * scale.</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ha shape = 10 és scale = mu_true / 10, akkor az átlag épp mu_true lesz,</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># de lesz benne egy reális szóródás/zaj!</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">PREMIUM =</span> <span class="fu">rgamma</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">shape =</span> <span class="dv">20</span>, <span class="at">scale =</span> mu_true <span class="sc">/</span> <span class="dv">10</span>)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Eltávolítjuk a segédváltozókat</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>base_rate, <span class="sc">-</span>exp_factor, <span class="sc">-</span>year_factor, <span class="sc">-</span>accident_factor, <span class="sc">-</span>mileage_factor, <span class="sc">-</span>mu_true)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `PREMIUM = rgamma(n = n(), shape = 20, scale = mu_true/10)`.
+Caused by warning in `rgamma()`:
+! NAs produced</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(car_insur<span class="sc">$</span>PREMIUM, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="3_GLM_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A biztonság kedvéért ellenőrizzük, hogy valóban gamma eloszlásról van-e szó és becsüljük meg hozzá a paramétereit!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(fitdistrplus) <span class="co"># szüksgés csomagok</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: fitdistrplus</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'fitdistrplus' csomag az R 4.6.1 verziójával lett fordítva</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: MASS</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Kapcsolódás csomaghoz: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    select</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: survival</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>premium_gamma_fit<span class="ot">&lt;-</span><span class="fu">fitdist</span>(<span class="fu">na.omit</span>(car_insur<span class="sc">$</span>PREMIUM), <span class="st">"gamma"</span>, <span class="at">method =</span> <span class="st">"mme"</span>) <span class="co"># többféle becslési eljárás létezik, a momentum alapú (mme) általában egyszerűbb, ezért legtöbbször működik</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>premium_normal_fit<span class="ot">&lt;-</span><span class="fu">fitdist</span>(<span class="fu">na.omit</span>(car_insur<span class="sc">$</span>PREMIUM), <span class="st">"norm"</span>, <span class="at">method =</span> <span class="st">"mme"</span>) <span class="co"># csak az összehasonlításhoz becsüljük meg a normális eloszlás paramétereit</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(premium_gamma_fit) <span class="co"># a becsült paraméterek</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Fitting of the distribution ' gamma ' by matching moments 
+Parameters : 
+          estimate   Std. Error
+shape 1.102871e+01 1.712891e-01
+rate  5.755029e-05 9.122131e-07
+Loglikelihood:  -111625.4   AIC:  223254.8   BIC:  223269 
+Correlation matrix:
+          shape      rate
+shape 1.0000000 0.9798426
+rate  0.9798426 1.0000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(premium_normal_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Fitting of the distribution ' norm ' by matching moments 
+Parameters : 
+      estimate Std. Error
+mean 191635.97   606.8180
+sd    57705.17   429.8687
+Loglikelihood:  -111970.8   AIC:  223945.6   BIC:  223959.8 
+Correlation matrix:
+             mean           sd
+mean 1.0000000000 0.0004894874
+sd   0.0004894874 1.0000000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gofstat</span>(<span class="fu">list</span>(premium_gamma_fit, premium_normal_fit)) <span class="co"># illeszkedés vizsgálata a két eloszlásra, a GoF értékek közül a kisebb a kedvezőbb, mivel távolságokról van szó</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Goodness-of-fit statistics
+                             1-mme-gamma  2-mme-norm
+Kolmogorov-Smirnov statistic 0.006841091  0.04243262
+Cramer-von Mises statistic   0.076270283  6.31602725
+Anderson-Darling statistic   0.702976946 40.49771344
+
+Goodness-of-fit criteria
+                               1-mme-gamma 2-mme-norm
+Akaike's Information Criterion    223254.8   223945.6
+Bayesian Information Criterion    223269.0   223959.8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitdist</span>(mtcars<span class="sc">$</span>mpg, <span class="st">"gamma"</span>) <span class="sc">%&gt;%</span> <span class="fu">llplot</span>() <span class="co"># rajzoljuk ki a becslések likelihood kontúr ábráját</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="3_GLM_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A gamma eloszlás feltételezését tehát elfogadhatjuk. Illesszünk GLM modellt az adatokra, a díjat magyarázzuk az összes változóval! A legfontosabb, hogy az eloszláscsalád definiálásakor <strong>Gamma</strong> eloszlást adjunk meg (ügyeljünk a nagy kezdőbetűre). Az alábbi eloszcsaládok kezeltek:</p>
+<ul>
+<li>binomial(link = “logit”)</li>
+<li>gaussian(link = “identity”)</li>
+<li>Gamma(link = “inverse”)</li>
+<li>inverse.gaussian(link = “1/mu^2”)</li>
+<li>poisson(link = “log”)</li>
+<li>quasi(link = “identity”, variance = “constant”)</li>
+<li>quasibinomial(link = “logit”)</li>
+<li>quasipoisson(link = “log”)</li>
+</ul>
+<p>A link függvényt nem kötelező megadni, ha az alapértelmezett változat megfelelő. Bár matematikailag az inverz jelenti a kanonikus formát, az aktuáriustudományok gyakran inkább a <strong>log</strong> link függvényt alkalmazzák. Ennek több oka is van, amit érdemes megemlíteni:</p>
+<ul>
+<li>A biztosítási tarifa számításánál a prediktorok hatásai inkább multiplikatívak, mintsem additív formát öltenek. Ennek jellemzően gyakorlati okai vannak, mert a modell könnyebben interpretálható (x%-kal magasabb kár).</li>
+<li>Az inverz értékkel nem garantált a pozitív tartomány (bár nem valószínű, hogy az inverz esetén ilyen előfordulna).</li>
+<li>Gyorsabb algoritmus a becslés során.</li>
+<li>Összhangban van a többi aktuáriusi kockázati modellel.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data =</span> car_insur, PREMIUM<span class="sc">~</span>., <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link=</span><span class="st">"log"</span>)) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = PREMIUM ~ ., family = Gamma(link = "log"), data = car_insur)
+
+Coefficients:
+                           Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)               1.234e+01  2.534e-02 486.942  &lt; 2e-16 ***
+ID                       -1.549e-09  8.657e-09  -0.179   0.8580    
+AGE26-39                 -8.439e-03  1.019e-02  -0.828   0.4076    
+AGE40-64                 -7.338e-03  1.150e-02  -0.638   0.5233    
+AGE65+                   -2.016e-03  1.342e-02  -0.150   0.8806    
+GENDERmale                7.200e-03  5.576e-03   1.291   0.1967    
+RACEminority             -1.136e-02  8.404e-03  -1.351   0.1766    
+DRIVING_EXPERIENCE10-19y -2.694e-01  8.896e-03 -30.288  &lt; 2e-16 ***
+DRIVING_EXPERIENCE20-29y -5.247e-01  1.155e-02 -45.432  &lt; 2e-16 ***
+DRIVING_EXPERIENCE30y+   -7.425e-01  1.583e-02 -46.905  &lt; 2e-16 ***
+EDUCATIONnone             1.579e-02  7.625e-03   2.071   0.0384 *  
+EDUCATIONuniversity       2.203e-03  6.098e-03   0.361   0.7180    
+INCOMEpoverty            -1.438e-02  1.118e-02  -1.286   0.1984    
+INCOMEupper class         2.460e-03  8.146e-03   0.302   0.7626    
+INCOMEworking class      -5.451e-03  8.998e-03  -0.606   0.5447    
+CREDIT_SCORE             -2.329e-03  2.778e-02  -0.084   0.9332    
+VEHICLE_OWNERSHIP         7.827e-03  6.328e-03   1.237   0.2161    
+VEHICLE_YEARbefore 2015  -2.218e-01  5.969e-03 -37.158  &lt; 2e-16 ***
+MARRIED                  -1.975e-03  6.075e-03  -0.325   0.7452    
+CHILDREN                 -9.619e-04  6.428e-03  -0.150   0.8811    
+POSTAL_CODE               1.045e-07  1.400e-07   0.746   0.4555    
+ANNUAL_MILEAGE            7.446e-06  1.144e-06   6.506 8.17e-11 ***
+VEHICLE_TYPEsports car   -5.641e-03  1.183e-02  -0.477   0.6335    
+SPEEDING_VIOLATIONS       2.975e-02  1.601e-03  18.585  &lt; 2e-16 ***
+DUIS                      5.510e-03  5.004e-03   1.101   0.2709    
+PAST_ACCIDENTS            9.686e-02  2.021e-03  47.940  &lt; 2e-16 ***
+OUTCOME                  -1.055e-03  7.225e-03  -0.146   0.8839    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Gamma family taken to be 0.05157602)
+
+    Null deviance: 737.71  on 8148  degrees of freedom
+Residual deviance: 422.33  on 8122  degrees of freedom
+  (1851 observations deleted due to missingness)
+AIC: 196627
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<p>Sok változónk van, amelyek nem járulnak hozzá a becsléshez, ezért ezek a <span class="math inline">\(\beta_i\)</span> nulla értéket vesznek fel, de legalábbis a <span class="math inline">\(H_0: \beta_i=0\)</span> hipotézist nem lehet elutasítani. A legegyszerűbb módja annak, hogy csak a szignifikáns prediktorok maradjanak a modellben az, hogy valamilyen változószelekciós eljárást alkalmazunk. A legegyszerűbb (és egyben legdurvább) ilyen módszer a <code>sep()</code> (<em>stepwise</em>) algoritmus használata.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>backward_gamma<span class="ot">&lt;-</span><span class="fu">stepAIC</span>(<span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">na.omit</span>(car_insur), PREMIUM<span class="sc">~</span>., <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link=</span><span class="st">"log"</span>)), <span class="at">direction =</span> <span class="st">"backward"</span>, <span class="at">trace=</span><span class="dv">0</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(backward_gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = PREMIUM ~ DRIVING_EXPERIENCE + VEHICLE_OWNERSHIP + 
+    VEHICLE_YEAR + ANNUAL_MILEAGE + SPEEDING_VIOLATIONS + PAST_ACCIDENTS, 
+    family = Gamma(link = "log"), data = na.omit(car_insur))
+
+Coefficients:
+                           Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)               1.233e+01  1.359e-02  907.47  &lt; 2e-16 ***
+DRIVING_EXPERIENCE10-19y -2.725e-01  6.636e-03  -41.06  &lt; 2e-16 ***
+DRIVING_EXPERIENCE20-29y -5.254e-01  8.765e-03  -59.95  &lt; 2e-16 ***
+DRIVING_EXPERIENCE30y+   -7.396e-01  1.227e-02  -60.29  &lt; 2e-16 ***
+VEHICLE_OWNERSHIP         1.017e-02  5.652e-03    1.80   0.0719 .  
+VEHICLE_YEARbefore 2015  -2.233e-01  5.573e-03  -40.07  &lt; 2e-16 ***
+ANNUAL_MILEAGE            7.529e-06  9.470e-07    7.95 2.11e-15 ***
+SPEEDING_VIOLATIONS       3.070e-02  1.517e-03   20.23  &lt; 2e-16 ***
+PAST_ACCIDENTS            9.733e-02  1.910e-03   50.95  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Gamma family taken to be 0.05153955)
+
+    Null deviance: 737.71  on 8148  degrees of freedom
+Residual deviance: 422.93  on 8140  degrees of freedom
+AIC: 196603
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+</div>
+</div>
+<p>Ha már megvan a modellünk, akkor többféle diagnosztikát is lefuttathatunk a modell jóságának illeszkedésére. A modellszintű illeszkedést a deviancia indikátorok mutatják (lásd később). Itt most az illeszkedést egy másik vetületben értékeljük. Folytonos változók esetén a hibatagokra vonatkozó követelmények hasonlók, mint a klasszikus lineáris regresszió esetében: függetlenség, nulla várható értékű normális eloszlás. Ezeket legtöbbször vizuálisan is tesztelhetjük, mert ha csak nem sértettünk nagyon komolyan a modell előfeltételein, akkor az optimalizációs kritérium miatt a hibatagokra vonatkozó statisztikai követelmények szinte mindig teljesülnek.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(backward_gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="3_GLM_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="3_GLM_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="3_GLM_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="3_GLM_files/figure-html/unnamed-chunk-5-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Látható, hogy a feltételek teljesülnek (elsősorban a QQ ábra vizsgálandó). Az output bevezet még két új mennyiséget:</p>
+<ul>
+<li>Cook-távolság</li>
+<li>Leverage-érték</li>
+</ul>
+</section>
+<section id="diagnisztikai-mutatók" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="diagnisztikai-mutatók"><span class="header-section-number">5.7</span> Diagnisztikai mutatók</h2>
+<p>Az alapértelmezett diagnosztika elsősorban a hibatagokat és az illesztett értékeket vizsgálja. Ha a fenti feltételek teljesülnek úgy a befolyásos értékek azonosítása marad a feladat, mivel ezek az értékek torzíthatják a becsléseket. A befolyásos értékeket gyakran <em>outlier</em>nek nevezik.</p>
+<p>::: {callout-note title=“Az outlierekről”} A hagyományos statisztika oktatás során a kiugró, extrém értéket felvevő megfigyeléseknek általában negatív a konnotációja, és az eltávolítását javasolják a mintából. Ennek oka, hogy a klasszikus statisztika mindig az ismert eloszlásokon keresztül közelíti meg az adatokat. Mivel mintáról van szó, valamekkora eltérés a teoretikus eloszlástól tolerálható, ugyanakkor a nagyobb devianciák már valóban torzítják a becsléseket, különösen kis minta esetén. A napjainkban használatos nagyobb minták során egy-egy extrém értéket felvevő megfigyelés már tud illeszkedni a teoretikus eloszlás szélére, és nem jelent számottevő torzítást.</p>
+<p>Gyakran előfordul azonban, hogy az eloszlás széle vastagabb, vagyis az ott található értékek bár jelentősen távol esnek az átlagtól, de nem számítanak ritka eseménynek. Ilyenkor valóban erős lehet a “húzóerő”, ami egy modell illesztett egyenesét az extrém értékek felé gravitálja. Ez azonban elsősorban csak akkor probléma, ha a függő változó feltételezett eloszlása nincs összhangban a tapasztalati eloszlással. Ilyenkor GLM modellt érdemes alkalmazni, ha egy exponenciális eloszlásra “ráhúzható” a minta eloszlásra.</p>
+<p>Természetesen előfordulhat, hogy egyetlen ismert eloszlásra sem “húzható rá” a minta eloszlása. Ilyenkor több módszer is adódik:</p>
+<ul>
+<li>Alkalmazzunk robusztus regressziót (GLM esetén is létezik), amely súlyozza a megfigyeléseket, például a <em>leverage</em> érték alapján (lásd lentebb).</li>
+<li>Alkalmazzunk zsugorító (<em>shrinkage</em>), reguralizációs eljárást, amely nem a megfigyelést, hanem a prediktor súlyát szabályozza. Ilyen módszer a <a href="https://en.wikipedia.org/wiki/Lasso_(statistics)">LASSO</a>, a <a href="https://en.wikipedia.org/wiki/Least-angle_regression">LARS</a>, de alkalmazhatók a neurális hálók is. :::</li>
+</ul>
+<section id="cook-távolság" class="level3" data-number="5.7.1">
+<h3 data-number="5.7.1" class="anchored" data-anchor-id="cook-távolság"><span class="header-section-number">5.7.1</span> Cook-távolság</h3>
+<p>A Cook-távolság egy meglepően hatékony mérték annak szemléltetésére, hogy vannak-e olyan outlier megfigyelések, amelyek erősen torzítják a modellt becsült paramétereit. A működési elv a következő:</p>
+<ol type="1">
+<li>Készítsük el a modellünket, amelybe minden megfigyelést bevonunk.</li>
+<li>Vegyünk ki egy megfigyelést, majd futtassuk újra modellt.</li>
+<li>Vizsgáljuk meg, hogyan változtak a becsült együtthatók értékei.</li>
+<li>Minél nagyobb a változás, annál nagyobb hatást gyakorol a kivett megfigyelés a modellre.</li>
+</ol>
+<p>Az elkészült modellen alkalmazzuk a <code>cook.distance(model)</code> függvényt, hogy megkapjuk a távolságokat.</p>
+</section>
+<section id="leverage-érték" class="level3" data-number="5.7.2">
+<h3 data-number="5.7.2" class="anchored" data-anchor-id="leverage-érték"><span class="header-section-number">5.7.2</span> Leverage érték</h3>
+<p>A Cook-távolság hátránya, hogy csak az elkészült modell birtokában lehet alkalmazni, hosszú adatbázisok esetén pedig sokáig tarthat az iteratív művelet, továbbá csak az egyes megfigyelésekre tud információt nyújtani. A <em>leverage érték</em> egy lépésben számolható és akár egész változóra is vonatkoztatható, és nem szükséges hozzá a modell számítása. AZ eljárás azon az elven alapul, hogy egy vektorban az átlagtól vett távolság alapján egy megfigyelés “<em>elhúzza</em>” az illesztett egyenest ettől a várható értéktől. Számítása a következő: legyen <span class="math inline">\(y_i=x_i^T\beta+\epsilon_i\)</span> regressziós modell. Ekkor a <em>leverage mátrix</em> a következő:</p>
+<p><span class="math display">\[
+\mathbf{H=X(X^TX)^{-1}X^T}
+\]</span></p>
+<p>Ekkor <span class="math inline">\(0\leq h_{ii} \leq 1\)</span> a <em>leverage érték (score)</em>. Minél nagyobb az értéke, annál erősebb befolyással bír az adott megfigyelés. Fontos megjegyezni, hogy a nagy <em>leverage</em> érték biztos nagy befolyással bír, de nem feltétlenül outlier.</p>
+</section>
+</section>
+<section id="bináris-és-binomiális-függő-változók-becslése" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="bináris-és-binomiális-függő-változók-becslése"><span class="header-section-number">5.8</span> Bináris és binomiális függő változók becslése</h2>
+<p>Legyen <span class="math inline">\(y:=\{0,1\}\)</span> bináris függő változó, és tegyük fel, hogy <span class="math inline">\(E(y|x)=P(y=1|x)=\pi\)</span>, azaz a függő változó értéke meghatározható az <em>x</em> prediktor segítségével. Ez a <span class="math inline">\(\text{var}(y|x)=\pi(1-\pi)\)</span> variancia struktúrát indukálja. Bináris és binomiális esetben a <span class="math inline">\(\pi\)</span> valószínűséget közelítjük <span class="math inline">\(\eta=z^{'}\beta\)</span> lineáris prediktorral egy <span class="math inline">\(\pi=h(\eta)\)</span> vonatkozó függvénnyel és <span class="math inline">\(g(\pi)=\eta\)</span> link függvénnyel.</p>
+<p>A lineáris (normális eloszlást feltételező) GLM modellek alkalmazhatók lennének egy identitás link esetében, azaz <span class="math inline">\(\pi=\eta=z^{'}\beta\)</span> formában. Miután azonban <span class="math inline">\(\pi\)</span> egy valószínűség, ezért <span class="math inline">\(z^{'}\beta\)</span> lineáris prediktornak a [0,1] tartományon kell maradnia <span class="math inline">\(\forall z\)</span> esetben, ami komoly megkötéseket jelent <span class="math inline">\(\beta\)</span> lehetséges értékeire nézve. Ezért szükségünk van az alábbi <em>F</em> monoton <em>eloszlás</em> függvényre:</p>
+<p><span class="math display">\[
+\pi=F(\eta)
+\]</span></p>
+<p><em>F</em> értéke több formát is ölthet, ami meghatározza a következő modelleket is.</p>
+<section id="probit-modell" class="level3" data-number="5.8.1">
+<h3 data-number="5.8.1" class="anchored" data-anchor-id="probit-modell"><span class="header-section-number">5.8.1</span> Probit modell</h3>
+<p>A modell általános alakha a következő:</p>
+<p><span class="math display">\[
+\pi=\Phi (\eta) = \Phi (z^{'}\beta)
+\]</span></p>
+<p>ahol <span class="math inline">\(\Phi\)</span> a standard normális eloszlásfüggvény, ami garantálja, hogy <span class="math inline">\(\pi\)</span> értéke a [0,1] sávban fog maradni.</p>
+</section>
+<section id="logit-modell" class="level3" data-number="5.8.2">
+<h3 data-number="5.8.2" class="anchored" data-anchor-id="logit-modell"><span class="header-section-number">5.8.2</span> Logit modell</h3>
+<p>A logit modell link függvénye:</p>
+<p><span class="math display">\[
+g(\pi)=\text{log}\left(\frac {\pi} {1-\pi}\right)=\eta
+\]</span></p>
+<p>A valószínűség becslése a logisztikus eloszlás függvény segítségvel történik:</p>
+<p><span class="math display">\[
+\pi=h(\eta)=\frac {\text{exp} (\eta)} {1+\text{exp}(\eta)}
+\]</span></p>
+<p>A 0 és 1 közeli értékek kivételével az eloszlás szélein, a <em>probit</em> és a <em>logit</em> modellek hasonló eredményeket adnak.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Példa Probit és Logit modellek">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Példa Probit és Logit modellek
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Használjuk az ismert <strong>car_insur</strong> adatbázist továbbra is, és adjunk becslést arra, hogy lesz-e káreseménye az ügyfélnek! A kalkulált díjat ne használjuk, hiszen ezt a kockázat alapján számoljuk ki.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> OUTCOME <span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>)) <span class="ot">-&gt;</span> glm_probit <span class="co"># futtassunk probit modellt</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> OUTCOME <span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)) <span class="ot">-&gt;</span> glm_logit <span class="co"># futassunk logit modellt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Hasonlítsuk össze az eredményeket. A probit modell egy eloszlásfüggvény illesztést ad eredménynek, míg a logit modell visszalakítása ennél egyszerűbb.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: ggplot2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(glm_probit<span class="sc">$</span>fitted.values) <span class="ot">-&gt;</span> probit <span class="co"># probit illesztett értékek</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(glm_logit<span class="sc">$</span>fitted.values)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(glm_logit<span class="sc">$</span>fitted.values)) <span class="ot">-&gt;</span> logit <span class="co"># logit illesztett értékek</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Probit=</span>probit, <span class="at">Logit=</span>logit) <span class="sc">%&gt;%</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Probit, <span class="at">y=</span>Logit)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="3_GLM_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="modellek-diszkrét-eloszlásokra" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="modellek-diszkrét-eloszlásokra"><span class="header-section-number">5.9</span> Modellek diszkrét eloszlásokra</h2>
+<p>Amennyiben a probléma természete engedi, úgy a normális eloszlású függő változóra illeszkedő modell is használható (kerekítéssel) vagy, ha csak alacsony értékek fordulnak elő (0, 1, … q), akkor a multinominális modellek alkalmazandók.</p>
+<p>Általánosságban a Poisson eloszlás alapú GLM modellek illeszkednek a legjobban.</p>
+<section id="log-lineáris-poisson-modell" class="level3" data-number="5.9.1">
+<h3 data-number="5.9.1" class="anchored" data-anchor-id="log-lineáris-poisson-modell"><span class="header-section-number">5.9.1</span> Log-lineáris Poisson modell</h3>
+<p>A legegyszerűbb Poisson GLM, hiszen <span class="math inline">\(\text{log}(\mu)=\eta=z^{'}\beta\)</span> és <span class="math inline">\(\mu=\text{exp}(\eta)\)</span> link függvénnyel kapcsolódik a prediktorhoz. Fontos kikötés azonban, hogy ebben a modellben <span class="math inline">\(\mu\)</span> várható érték és a magyarázó változók közötti dependencia <em>multiplikatív</em>! Amennyiben additív kapcsolatot sejtünk, hogy a lineáris modellre van szükségünk (azaz a link függvény állítsuk “identity” értékre).</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Példa Poisson eloszlású GLM">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Példa Poisson eloszlású GLM
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Illesszünk Poisson modellt az adatokra a <strong>car_insur</strong> adatbázis <em>PAST_ACCIDENTS</em> változójára. Itt se használjuk a kikalkulált díjat.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    PAST_ACCIDENTS<span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(<span class="st">"log"</span>)) <span class="ot">-&gt;</span> glm_pois_log <span class="co"># log link függvénnyel</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    PAST_ACCIDENTS<span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(<span class="st">"log"</span>)) <span class="ot">-&gt;</span> glm_pois_log <span class="ot">-&gt;</span>glm_pois_ident <span class="co"># identitás link függvénnyel</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_pois_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = PAST_ACCIDENTS ~ . - PREMIUM, family = poisson("log"), 
+    data = car_insur)
+
+Coefficients:
+                           Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)              -1.817e+01  2.269e+02  -0.080  0.93616    
+ID                        8.744e-09  3.694e-08   0.237  0.81288    
+AGE26-39                 -1.731e-01  3.445e+02  -0.001  0.99960    
+AGE40-64                 -1.942e-01  3.445e+02  -0.001  0.99955    
+AGE65+                   -2.202e-01  3.445e+02  -0.001  0.99949    
+GENDERmale                7.333e-01  2.484e-02  29.523  &lt; 2e-16 ***
+RACEminority              3.840e-02  3.645e-02   1.053  0.29218    
+DRIVING_EXPERIENCE10-19y  1.922e+01  2.592e+02   0.074  0.94090    
+DRIVING_EXPERIENCE20-29y  1.993e+01  2.592e+02   0.077  0.93871    
+DRIVING_EXPERIENCE30y+    2.037e+01  2.592e+02   0.079  0.93737    
+EDUCATIONnone            -2.401e-02  3.839e-02  -0.626  0.53161    
+EDUCATIONuniversity      -1.311e-02  2.453e-02  -0.534  0.59304    
+INCOMEpoverty            -1.926e-01  6.209e-02  -3.103  0.00192 ** 
+INCOMEupper class         2.797e-02  3.305e-02   0.846  0.39739    
+INCOMEworking class      -1.032e-01  4.423e-02  -2.334  0.01959 *  
+CREDIT_SCORE             -5.159e-01  1.178e-01  -4.380 1.19e-05 ***
+VEHICLE_OWNERSHIP        -5.528e-02  2.870e-02  -1.926  0.05406 .  
+VEHICLE_YEARbefore 2015   3.224e-02  2.320e-02   1.390  0.16461    
+MARRIED                   3.939e-02  2.643e-02   1.490  0.13614    
+CHILDREN                  4.099e-02  3.205e-02   1.279  0.20092    
+POSTAL_CODE              -1.541e-05  8.999e-07 -17.119  &lt; 2e-16 ***
+ANNUAL_MILEAGE           -6.584e-05  5.077e-06 -12.966  &lt; 2e-16 ***
+VEHICLE_TYPEsports car   -5.249e-02  5.224e-02  -1.005  0.31498    
+SPEEDING_VIOLATIONS      -1.557e-02  5.097e-03  -3.054  0.00226 ** 
+DUIS                     -3.992e-03  1.537e-02  -0.260  0.79501    
+OUTCOME                  -9.149e-02  4.282e-02  -2.137  0.03263 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 17956  on 8148  degrees of freedom
+Residual deviance:  6795  on 8123  degrees of freedom
+  (1851 observations deleted due to missingness)
+AIC: 16236
+
+Number of Fisher Scoring iterations: 17</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_pois_ident)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = PAST_ACCIDENTS ~ . - PREMIUM, family = poisson("log"), 
+    data = car_insur)
+
+Coefficients:
+                           Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)              -1.817e+01  2.269e+02  -0.080  0.93616    
+ID                        8.744e-09  3.694e-08   0.237  0.81288    
+AGE26-39                 -1.731e-01  3.445e+02  -0.001  0.99960    
+AGE40-64                 -1.942e-01  3.445e+02  -0.001  0.99955    
+AGE65+                   -2.202e-01  3.445e+02  -0.001  0.99949    
+GENDERmale                7.333e-01  2.484e-02  29.523  &lt; 2e-16 ***
+RACEminority              3.840e-02  3.645e-02   1.053  0.29218    
+DRIVING_EXPERIENCE10-19y  1.922e+01  2.592e+02   0.074  0.94090    
+DRIVING_EXPERIENCE20-29y  1.993e+01  2.592e+02   0.077  0.93871    
+DRIVING_EXPERIENCE30y+    2.037e+01  2.592e+02   0.079  0.93737    
+EDUCATIONnone            -2.401e-02  3.839e-02  -0.626  0.53161    
+EDUCATIONuniversity      -1.311e-02  2.453e-02  -0.534  0.59304    
+INCOMEpoverty            -1.926e-01  6.209e-02  -3.103  0.00192 ** 
+INCOMEupper class         2.797e-02  3.305e-02   0.846  0.39739    
+INCOMEworking class      -1.032e-01  4.423e-02  -2.334  0.01959 *  
+CREDIT_SCORE             -5.159e-01  1.178e-01  -4.380 1.19e-05 ***
+VEHICLE_OWNERSHIP        -5.528e-02  2.870e-02  -1.926  0.05406 .  
+VEHICLE_YEARbefore 2015   3.224e-02  2.320e-02   1.390  0.16461    
+MARRIED                   3.939e-02  2.643e-02   1.490  0.13614    
+CHILDREN                  4.099e-02  3.205e-02   1.279  0.20092    
+POSTAL_CODE              -1.541e-05  8.999e-07 -17.119  &lt; 2e-16 ***
+ANNUAL_MILEAGE           -6.584e-05  5.077e-06 -12.966  &lt; 2e-16 ***
+VEHICLE_TYPEsports car   -5.249e-02  5.224e-02  -1.005  0.31498    
+SPEEDING_VIOLATIONS      -1.557e-02  5.097e-03  -3.054  0.00226 ** 
+DUIS                     -3.992e-03  1.537e-02  -0.260  0.79501    
+OUTCOME                  -9.149e-02  4.282e-02  -2.137  0.03263 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 17956  on 8148  degrees of freedom
+Residual deviance:  6795  on 8123  degrees of freedom
+  (1851 observations deleted due to missingness)
+AIC: 16236
+
+Number of Fisher Scoring iterations: 17</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="modell-illeszkedés-értékelése-és-a-béta-koefficiensek-tesztelése" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="modell-illeszkedés-értékelése-és-a-béta-koefficiensek-tesztelése"><span class="header-section-number">5.10</span> Modell illeszkedés értékelése és a béta koefficiensek tesztelése</h2>
+<p>A modelleket jellemzően a <em>skálázott deviancia</em> segítségével értékeljük:</p>
+<p><span class="math display">\[
+S(y,\hat{\mu})=2(\ell(y;\phi,y)-\ell(\hat{\mu}, \phi,y))
+\]</span></p>
+<p>Azaz annak a log-likelihoodnak a különbsége, hogy a feltételezett paraméterek mellett a megfigyelt adatsort, illetve a becsült adatsort kapjuk.</p>
+<p>Egy másik indikátor <em>reziduális deviancia</em>, ami tulajdonképpen a skálázott deviancia skálaparaméterrel korrigált változata:</p>
+<p><span class="math display">\[
+D(y, \hat{\mu})=\phi S(y, \hat{\mu})
+\]</span></p>
+<p>Két modell összehasonlítására a <em>likelihood arány próba</em> szolgál. Legyen Model1 <span class="math inline">\(\eta=X\beta\)</span> alakú, Model2 pedig <span class="math inline">\(\eta=X\beta+Z\gamma\)</span> alakú, ahol <span class="math inline">\(rank(Z)=r\)</span>. Model1 dimenziószáma <span class="math inline">\(p_1\)</span>, Model2 dimenziószáma pedig <span class="math inline">\(p_2=p_1+r\)</span>. Más szavakkal Model1 egy szűkebb, Model2 pedig egy tágabb modell. A teszt statisztika a következő:</p>
+<p><span class="math display">\[
+2(\ell_2-\ell_1)=S(y;\hat{\mu_1})-S(y;\hat{\mu_2})=\frac {D(y;\hat{\mu_1}) - D(y;\hat{\mu_2})} {\phi}
+\]</span></p>
+<p>Ha <span class="math inline">\(\phi\)</span> ismert, akkor a teszthez tartozó eloszlás <span class="math inline">\(\chi^2\)</span> eloszlást követ. Ha <span class="math inline">\(\phi\)</span> nem ismert, akkor lehetséges a Model2 által becsült <span class="math inline">\(\hat{\phi}\)</span> értéket használni <em>r</em> dimenziószámmal korrigálva, ekkor azonban <em>F</em>-próbát kell alkalmaznunk:</p>
+<p><span class="math display">\[
+\frac {D(y;\hat{\mu_1}) - D(y;\hat{\mu_2})} {\hat{\phi}r} \sim F_{r,n-p_2}
+\]</span></p>
+<p>A GLM modellek outputjában megtalálható a <em>Null deviance</em> mutató, ami a teljes (szaturált, minden magyarázó változót tartalmazó) modell hasonlítja a null-modellhez, ami csak egy paraméter becslést tartalmaz (jellemzően a várható értéket).</p>
+<p>Értelemszerűen, ha a null devianciánk nagyon alacsony, akkor a teljes (szaturált) modellünk nem sokkal jobb, mint a null-modellünk (analógiájában a lineáris regressziók esetében alkalmazott globális F-próbához hasonló, csak hipotézis vizsgálat nélkül).</p>
+<p>A <span class="math inline">\(\beta\)</span> koefficiensekre vonatkozó t-próbák a szokásos <span class="math inline">\(t=\frac {\hat{\beta}-\beta} {\sigma_{\beta}}\)</span> módon történik.</p>
+<p>Két modell összehasonlításához használható még az <em>Akaike információs kritérium</em> is:</p>
+<p><span class="math display">\[
+AIC(\hat{\mu})=D(y;\hat{\mu})+2p\phi
+\]</span></p>
+<p>ahol <em>p</em> a modell paramétereinek száma (a modell dimenziószáma).</p>
+</section>
+<section id="túlszóródás" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="túlszóródás"><span class="header-section-number">5.11</span> Túlszóródás</h2>
+<p>A legtöbb lineáris regressziós modellben, mikor <span class="math inline">\(y\in \mathbb{R}\)</span>, feltételezzük, hogy <span class="math inline">\(\epsilon \sim \mathcal{N}(0,\sigma^2)\)</span>. A modellben mind a várható érték, mind a variancia független egymástól, hiszen <span class="math inline">\(E(Y|x)=\mu(x)\)</span> és <span class="math inline">\(Var(Y|x)=\sigma^2\)</span> (ami nem függ <em>x</em>-től).</p>
+<p>Poisson vagy logisztikus regressziós GLM modellekben a várható érték és a variancia nem független egymástól. Possion esetben ismert, hogy <span class="math inline">\(E(Y|x)=\mu(x)\)</span> és <span class="math inline">\(Var(Y|x)=\mu(x)\)</span>.</p>
+<p>Logisztikus regresszió esetén pedig legyen például a függő változónk <span class="math inline">\(n_m\)</span> darab próba, aminek várható értéke: <span class="math inline">\(E(Y|x)=\mu(x)=n_m\pi(x)\)</span>. Ilyen esetben ismert, hogy <span class="math inline">\(Var(Y|x)=n_m\pi(x)(1-\pi(x))\)</span>, vagyis a fenti két esetben a várható érték és a variancia tényleg nem független egymástól, amit a modellben kezelnünk kell.</p>
+<p>Regressziós modellekben természetesen gyakran előfordul, hogy a variancia viselkedése nem felel meg az előzetes várakozásainknak, más szavakkal a <span class="math inline">\(\sigma^2\)</span> nem konstans minden <em>x</em> érték esetében. A jelenség <em>heteroszkedaszticitás</em> néven is ismert. GLM-ek esetében tipikusan ilyen helyzet áll elő, ha valaminek az elemszámát (“<em>counts</em>”) vagy a megoszlását modellezzük. A modellek rosszul illeszkednek annak ellenére, hogy a becsült várható érték (vagy azzal ekvivalens paraméter) egyébként jól lett közelítve. Ezt a jelenséget <strong>túlszóródásnak</strong> (“<em>overdispersion</em>”) nevezik.</p>
+<section id="a-túlszóródás-okai" class="level3" data-number="5.11.1">
+<h3 data-number="5.11.1" class="anchored" data-anchor-id="a-túlszóródás-okai"><span class="header-section-number">5.11.1</span> A túlszóródás okai</h3>
+<p>Lineáris regressziós modellek esetén mikor beveszünk egy fontosnak tartott magyarázó változót a modellbe, akkor az általa megmagyarázott variancia “kikerül” a hiba négyzetösszegből és a megmagyarázott négyzetösszegbe “kerül”. Megfordítva a dolgot, ha egy fontos változót kihagyunk a modellből, akkor az <em>SSE</em> érték nagyobb lesz, mintha a változó a modellben szerepelne. Következésképp az átlagos négyzetes hiba (<em>MSE</em>) elinflálódik, és a valós <span class="math inline">\(\sigma^2\)</span> variancia felül lesz becsülve.</p>
+<p>Ezzel szembe, ha binomiális vagy Poisson modellben hagyunk ki egy fontos magyarázó változót, akkor a modell egyes megfigyelések becsült értékeire ugyanazt a várható értéket adja, holott azok tényleges értéke eltérő a kihagyott változó hatása miatt.</p>
+<p>A kihagyott változón kívül még a túlszóródás oka lehet, hogy a standard binomiális és Poisson modellek feltételezik, hogy a megfigyelések vagy a próbák és kísérletek egymástól függetlenek. Tipikusan ez az eset állhat elő, ha a mintavétel klaszterekből, csoportosan történik. Például ha egy gyártósorról veszünk mintát, akkor a hibás elemek nagy valószínűséggel hasonló mintázatot fognak követni, mintha különböző, véletlenszerű gyártósorokról vennénk őket. Ez a pozitív korreláció nagyobb varianciát eredményez a modellekben a túlillesztés miatt.</p>
+</section>
+<section id="kvázi-likelihood-modellek" class="level3" data-number="5.11.2">
+<h3 data-number="5.11.2" class="anchored" data-anchor-id="kvázi-likelihood-modellek"><span class="header-section-number">5.11.2</span> Kvázi-likelihood modellek</h3>
+<p>Sok esetben a túlszóródásnak könnyen kezelhető oka van, például kiugró értékek. Ugyanakkor, ha a jelenséget egy kihagyott változó okozza és ezt nem tudjuk orvosolni, akkor más megoldáshoz kell folyamodni. Ilyen lehet például, hogy a egy másik eloszláscsaládot használunk fel a modellezés során egy olyan extra paraméterrel, ami a nem megmagyarázott varianciát méri.</p>
+<p>A kvázi-likelihood modellek binomiális és Poisson esetekben használhatók. Legyen például egy <span class="math inline">\(y \sim Pois(\mu(x))\)</span> függő változónk <span class="math inline">\(\mu(x)\)</span> várható értékkel, ahol <em>x</em> a magyarázó változókat jelöli. Tegyük fel, hogy a túlszóródás a variancia konstans inflálódásából fakad, azaz <span class="math inline">\(Var(y|x)=\gamma \mu(x)\)</span>, ahol <span class="math inline">\(\gamma \geq 1\)</span> egy diszperziós paraméter. A kvázi-likelihood modell úgy alkotható meg ebben az esetben, ha a Poisson log-likelihood modellt elosztjuk <span class="math inline">\(\gamma\)</span> paraméterrel. Ez nem változtatja meg a becsült paramétereket. <span class="math inline">\(\gamma\)</span> paraméterre a becslést a <em>Pearson-féle illeszkedési statisztika</em> és <em>hibatagok szabadságfok</em>ának hányadosa adja.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Kvázi-poisson regresszió">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Kvázi-poisson regresszió
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Az eredeti példa <a href="https://rpubs.com/Julian_Sampedro/1047952">itt</a> található. Mivel a túlszóródást csak ott tudjuk megmutatni, ahol valóban jelen van, ezért olyan adatbázist választottunk, ahol biztosan jól megmutatható a módszer.</p>
+<p>Ebben a kutatásban azt vizsgálták, hogy egy házasságban hányszor lép félre az egyik fél. A félrelépések száma valószínűleg Poisson eloszlást követ.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(AER)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: AER</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'AER' csomag az R 4.6.1 verziójával lett fordítva</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: car</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'car' csomag az R 4.6.1 verziójával lett fordítva</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'carData' csomag az R 4.6.1 verziójával lett fordítva</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Kapcsolódás csomaghoz: 'car'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    recode</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: lmtest</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'lmtest' csomag az R 4.6.1 verziójával lett fordítva</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: zoo</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Kapcsolódás csomaghoz: 'zoo'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>A szükséges csomag betöltődik: sandwich</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: a(z) 'sandwich' csomag az R 4.6.1 verziójával lett fordítva</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Affairs)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>affairs2<span class="ot">&lt;-</span><span class="fu">sample_n</span>(Affairs, <span class="dv">20</span>)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(affairs2<span class="sc">$</span>affairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="3_GLM_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Feltételezésünk valószínűleg megállja a helyét. Futtassuk le a GLM regressziónkat.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>pois.model<span class="ot">&lt;-</span><span class="fu">glm</span>(<span class="at">data=</span>affairs2, affairs<span class="sc">~</span>., <span class="at">family =</span> <span class="st">"poisson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted rates numerically 0 occurred</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pois.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = affairs ~ ., family = "poisson", data = affairs2)
+
+Coefficients:
+                Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)      154.520 559446.633       0        1
+gendermale        -9.108  53823.217       0        1
+age               -2.964  12183.862       0        1
+yearsmarried       2.704  13502.705       0        1
+childrenyes       31.247 179813.683       0        1
+religiousness     -6.689  73758.865       0        1
+education         -3.398  29045.198       0        1
+occupation         1.617  43736.516       0        1
+rating           -13.315  46297.982       0        1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 9.6387e+01  on 19  degrees of freedom
+Residual deviance: 3.2305e-10  on 11  degrees of freedom
+AIC: 34.944
+
+Number of Fisher Scoring iterations: 25</code></pre>
+</div>
+</div>
+<p>Látjuk, hogy a diszperziós paraméter a modellben <span class="math inline">\(\gamma=1\)</span>. Ellenőrizzük, hogy ez valóban így van-e. A Pearson-féle illeszkedési statisztika rendkívül egyszerű:</p>
+<p><span class="math display">\[
+X^2=\sum_{i=1}^n \frac {(y_i- \tilde{\lambda_i})^2} {\tilde{\lambda_i}}
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>pois.person<span class="ot">&lt;-</span><span class="fu">residuals</span>(pois.model, <span class="at">type =</span> <span class="st">"pearson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Számljuk ki a becsült diszperziós paramétert, ami a person-féle statisztika a modell hibatagjainak szabadságfoka.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(pois.person<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>pois.model<span class="sc">$</span>df.residual</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.468431e-11</code></pre>
+</div>
+</div>
+<p>Az egységnyi diszperziós paraméterre tett feltételezést valószínűleg elvethetjük.</p>
+<p>Futtassunk kvázipoisson modellt.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>quasi.pois.model<span class="ot">&lt;-</span><span class="fu">glm</span>(<span class="at">data=</span>affairs2, affairs<span class="sc">~</span>., <span class="at">family =</span> <span class="st">"quasipoisson"</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(quasi.pois.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = affairs ~ ., family = "quasipoisson", data = affairs2)
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   154.52046    3.53425  43.721 1.09e-13 ***
+gendermale     -9.10815    0.34002 -26.787 2.28e-11 ***
+age            -2.96420    0.07697 -38.511 4.38e-13 ***
+yearsmarried    2.70417    0.08530  31.701 3.66e-12 ***
+childrenyes    31.24695    1.13596  27.507 1.71e-11 ***
+religiousness  -6.68942    0.46596 -14.356 1.81e-08 ***
+education      -3.39846    0.18349 -18.521 1.22e-09 ***
+occupation      1.61733    0.27630   5.853  0.00011 ***
+rating        -13.31504    0.29248 -45.524 7.03e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for quasipoisson family taken to be 3.990965e-11)
+
+    Null deviance: 9.6387e+01  on 19  degrees of freedom
+Residual deviance: 3.2305e-10  on 11  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 25</code></pre>
+</div>
+</div>
+<p>A kvázi-poisson modellben a változók szignifikancia szintje “elveszhet”, mivel a konfidencia intervallum kiszélesedik, kompenzálandó a túlszóródást, hiszen egy Poisson modellben a <span class="math inline">\(\mu=\sigma^2\)</span>. Ezzel ugyan úgy tűnhet, hogy egy rosszabb modellre cseréltük az eredeti regressziónkat, azonban éppen ez a “reális”, hiszen egy rosszul illeszkedő modellünk volt korábban is szignifikáns változókkal.</p>
+<p>Vegyük észre, hogy az AIC mutató nem definiált, ennek oka, hogy a likelihood függvény a kvázi-likelihood modellek esetében nem jól definiált.</p>
+<p><strong>Fontos, hogy a kvázi-likelihood modelleket csak abban az esetben használjuk, ha valóban arra gyanakszunk, hogy a túlszóródást kihagyott változók okozzák!</strong></p>
+</div>
+</div>
 
 
 </section>
 </section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>a kód a Gemeni AI segítségével készült<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
     }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
     }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -434,349 +1245,197 @@ f(y)=\text{exp}\left\{(-\alpha) \frac {y} {\mu}\right\}
       }
       return codeEl.innerText;
     }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
-    });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
     }
-      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
-      var isInternal = (href) => {
-          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
       }
-      // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-      for (var i=0; i<links.length; i++) {
-        const link = links[i];
-        if (!isInternal(link.href)) {
-          // undo the damage that might have been done by quarto-nav.js in the case of
-          // links that we want to consider external
-          if (link.dataset.originalHref !== undefined) {
-            link.href = link.dataset.originalHref;
-          }
-        }
-      }
-    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-      const config = {
-        allowHTML: true,
-        maxWidth: 500,
-        delay: 100,
-        arrow: false,
-        appendTo: function(el) {
-            return el.parentElement;
-        },
-        interactive: true,
-        interactiveBorder: 10,
-        theme: 'quarto',
-        placement: 'bottom-start',
-      };
-      if (contentFn) {
-        config.content = contentFn;
-      }
-      if (onTriggerFn) {
-        config.onTrigger = onTriggerFn;
-      }
-      if (onUntriggerFn) {
-        config.onUntrigger = onUntriggerFn;
-      }
-      window.tippy(el, config); 
-    }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
-      });
-    }
-    const xrefs = window.document.querySelectorAll('a.quarto-xref');
-    const processXRef = (id, note) => {
-      // Strip column container classes
-      const stripColumnClz = (el) => {
-        el.classList.remove("page-full", "page-columns");
-        if (el.children) {
-          for (const child of el.children) {
-            stripColumnClz(child);
-          }
-        }
-      }
-      stripColumnClz(note)
-      if (id === null || id.startsWith('sec-')) {
-        // Special case sections, only their first couple elements
-        const container = document.createElement("div");
-        if (note.children && note.children.length > 2) {
-          container.appendChild(note.children[0].cloneNode(true));
-          for (let i = 1; i < note.children.length; i++) {
-            const child = note.children[i];
-            if (child.tagName === "P" && child.innerText === "") {
-              continue;
-            } else {
-              container.appendChild(child.cloneNode(true));
-              break;
-            }
-          }
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(container);
-          }
-          return container.innerHTML
-        } else {
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(note);
-          }
-          return note.innerHTML;
-        }
-      } else {
-        // Remove any anchor links if they are present
-        const anchorLink = note.querySelector('a.anchorjs-link');
-        if (anchorLink) {
-          anchorLink.remove();
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        if (note.classList.contains("callout")) {
-          return note.outerHTML;
-        } else {
-          return note.innerHTML;
-        }
-      }
-    }
-    for (var i=0; i<xrefs.length; i++) {
-      const xref = xrefs[i];
-      tippyHover(xref, undefined, function(instance) {
-        instance.disable();
-        let url = xref.getAttribute('href');
-        let hash = undefined; 
-        if (url.startsWith('#')) {
-          hash = url;
-        } else {
-          try { hash = new URL(url).hash; } catch {}
-        }
-        if (hash) {
-          const id = hash.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note !== null) {
-            try {
-              const html = processXRef(id, note.cloneNode(true));
-              instance.setContent(html);
-            } finally {
-              instance.enable();
-              instance.show();
-            }
-          } else {
-            // See if we can fetch this
-            fetch(url.split('#')[0])
-            .then(res => res.text())
-            .then(html => {
-              const parser = new DOMParser();
-              const htmlDoc = parser.parseFromString(html, "text/html");
-              const note = htmlDoc.getElementById(id);
-              if (note !== null) {
-                const html = processXRef(id, note);
-                instance.setContent(html);
-              } 
-            }).finally(() => {
-              instance.enable();
-              instance.show();
-            });
-          }
-        } else {
-          // See if we can fetch a full url (with no hash to target)
-          // This is a special case and we should probably do some content thinning / targeting
-          fetch(url)
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.querySelector('main.content');
-            if (note !== null) {
-              // This should only happen for chapter cross references
-              // (since there is no id in the URL)
-              // remove the first header
-              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-                note.children[0].remove();
-              }
-              const html = processXRef(null, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      }, function(instance) {
-      });
-    }
-        let selectedAnnoteEl;
-        const selectorForAnnotation = ( cell, annotation) => {
-          let cellAttr = 'data-code-cell="' + cell + '"';
-          let lineAttr = 'data-code-annotation="' +  annotation + '"';
-          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-          return selector;
-        }
-        const selectCodeLines = (annoteEl) => {
-          const doc = window.document;
-          const targetCell = annoteEl.getAttribute("data-target-cell");
-          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-          const lineIds = lines.map((line) => {
-            return targetCell + "-" + line;
-          })
-          let top = null;
-          let height = null;
-          let parent = null;
-          if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
-            }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
-            }
-            selectedAnnoteEl = annoteEl;
-          }
-        };
-        const unselectCodeLines = () => {
-          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-          elementsIds.forEach((elId) => {
-            const div = window.document.getElementById(elId);
-            if (div) {
-              div.remove();
-            }
-          });
-          selectedAnnoteEl = undefined;
-        };
-          // Handle positioning of the toggle
-      window.addEventListener(
-        "resize",
-        throttle(() => {
-          elRect = undefined;
-          if (selectedAnnoteEl) {
-            selectCodeLines(selectedAnnoteEl);
-          }
-        }, 10)
-      );
-      function throttle(fn, ms) {
-      let throttle = false;
-      let timer;
-        return (...args) => {
-          if(!throttle) { // first call gets through
-              fn.apply(this, args);
-              throttle = true;
-          } else { // all the others get throttled
-              if(timer) clearTimeout(timer); // cancel #2
-              timer = setTimeout(() => {
-                fn.apply(this, args);
-                timer = throttle = false;
-              }, ms);
-          }
-        };
-      }
-        // Attach click handler to the DT
-        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-        for (const annoteDlNode of annoteDls) {
-          annoteDlNode.addEventListener('click', (event) => {
-            const clickedEl = event.target;
-            if (clickedEl !== selectedAnnoteEl) {
-              unselectCodeLines();
-              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-              if (activeEl) {
-                activeEl.classList.remove('code-annotation-active');
-              }
-              selectCodeLines(clickedEl);
-              clickedEl.classList.add('code-annotation-active');
-            } else {
-              // Unselect the line
-              unselectCodeLines();
-              clickedEl.classList.remove('code-annotation-active');
-            }
-          });
-        }
-    const findCites = (el) => {
-      const parentEl = el.parentElement;
-      if (parentEl) {
-        const cites = parentEl.dataset.cites;
-        if (cites) {
-          return {
-            el,
-            cites: cites.split(' ')
-          };
-        } else {
-          return findCites(el.parentElement)
-        }
-      } else {
-        return undefined;
-      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
     };
-    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-    for (var i=0; i<bibliorefs.length; i++) {
-      const ref = bibliorefs[i];
-      const citeInfo = findCites(ref);
-      if (citeInfo) {
-        tippyHover(citeInfo.el, function() {
-          var popup = window.document.createElement('div');
-          citeInfo.cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            popup.appendChild(citeDiv);
-          });
-          return popup.innerHTML;
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
         });
       }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
     }
-  });
-  </script>
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./2_EDA.html" class="pagination-link" aria-label="Feltáró adatelemzés és adatvizualizáció">
+      <a href="./2_EDA.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Feltáró adatelemzés és adatvizualizáció</span></span>
       </a>          
   </div>
@@ -784,7 +1443,6 @@ f(y)=\text{exp}\left\{(-\alpha) \frac {y} {\mu}\right\}
   </div>
 </nav>
 </div> <!-- /content -->
-
 
 
 
