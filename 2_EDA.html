@@ -300,7 +300,7 @@ dbl (11): ID, CREDIT_SCORE, VEHICLE_OWNERSHIP, MARRIED, CHILDREN, POSTAL_COD...
   ..   PAST_ACCIDENTS = col_double(),
   ..   OUTCOME = col_double()
   .. )
- - attr(*, "problems")=&lt;pointer: 0x000001d4335ff370&gt; </code></pre>
+ - attr(*, "problems")=&lt;pointer: 0x000002b8fabd52c0&gt; </code></pre>
 </div>
 </div>
 <p>Láthatjuk, hogy numerikus és string (chr) típusú adataink vannak. Ez utóbbiakat faktorokként tudjuk kezelni. Ezekről az adatokról szeretnénk egy átfogó képet kapni. A numerikus adatokra vonatkozóan a momentumokra tudunk becsléseket kérni, a kategórikus (faktor) adatokra nézve pedig gyakoriságokat.</p>
@@ -509,7 +509,7 @@ P(|\hat{\Theta}-\Theta)&gt;d &lt; \alpha
     Shapiro-Wilk normality test
 
 data:  sample(car_insur$CREDIT_SCORE, 5000)
-W = 0.99178, p-value = 1.561e-15</code></pre>
+W = 0.99346, p-value = 1.791e-13</code></pre>
 </div>
 </div>
 <p>A Shapiro-próba null-hipotézise, hogy a vektor normális eloszlásból származik. Itt ezt el kell utasítanunk.</p>

@@ -248,9 +248,9 @@ RSS(\mathbf{\beta})=\sum (y_i-\mathbf{x_i^T \beta})^2=(\mathbf{Y-X\beta})^T(\mat
 \]</span></p>
 <p>Átrendeződés után adódik, hogy</p>
 <p><span class="math display">\[
-\mathbf{\hat{\beta}}=(\mathbf{X^TX})^{-1}\mathbf{X^TY}
+\mathbf{\hat{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}
 \]</span></p>
-<p>A megoldáshoz szükséges, hogy <span class="math inline">\((\mathbf{X^TX})^{-1}\)</span> determinánsa nem lehet nulla. Ha az így lenne, akkor tökéletes multikollinearitást jelentene. Az egyenlet megoldása numerikus módszereket igényel, azért hogy egy nagy mátrix inverzét is gyorsan ki tudja számolni a számítógép. Ha <span class="math inline">\(\hat{\beta}\)</span> vektor már rendelkezésre áll <span class="math inline">\(\hat{\beta_0}\)</span> becslés már könnyen előállítható:</p>
+<p>A megoldáshoz szükséges, hogy <span class="math inline">\((\mathbf{X}^T \mathbf{X})^{-1}\)</span> determinánsa nem lehet nulla. Ha az így lenne, akkor tökéletes multikollinearitást jelentene. Az egyenlet megoldása numerikus módszereket igényel, azért hogy egy nagy mátrix inverzét is gyorsan ki tudja számolni a számítógép. Ha <span class="math inline">\(\hat{\beta}\)</span> vektor már rendelkezésre áll <span class="math inline">\(\hat{\beta_0}\)</span> becslés már könnyen előállítható:</p>
 <p><span class="math display">\[
 \hat{\beta_0}=\overline{y}-\mathbf{\hat{\beta}}^T\mathbf{\overline{x}}
 \]</span></p>
@@ -785,7 +785,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <h3 data-number="5.7.2" class="anchored" data-anchor-id="leverage-érték"><span class="header-section-number">5.7.2</span> Leverage érték</h3>
 <p>A Cook-távolság hátránya, hogy csak az elkészült modell birtokában lehet alkalmazni, hosszú adatbázisok esetén pedig sokáig tarthat az iteratív művelet, továbbá csak az egyes megfigyelésekre tud információt nyújtani. A <em>leverage érték</em> egy lépésben számolható és akár egész változóra is vonatkoztatható, és nem szükséges hozzá a modell számítása. AZ eljárás azon az elven alapul, hogy egy vektorban az átlagtól vett távolság alapján egy megfigyelés “<em>elhúzza</em>” az illesztett egyenest ettől a várható értéktől. Számítása a következő: legyen <span class="math inline">\(y_i=x_i^T\beta+\epsilon_i\)</span> regressziós modell. Ekkor a <em>leverage mátrix</em> a következő:</p>
 <p><span class="math display">\[
-\mathbf{H=X(X^TX)^{-1}X^T}
+\mathbf{H=X}(\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^{-1}
 \]</span></p>
 <p>Ekkor <span class="math inline">\(0\leq h_{ii} \leq 1\)</span> a <em>leverage érték (score)</em>. Minél nagyobb az értéke, annál erősebb befolyással bír az adott megfigyelés. Fontos megjegyezni, hogy a nagy <em>leverage</em> érték biztos nagy befolyással bír, de nem feltétlenül outlier.</p>
 </section>
