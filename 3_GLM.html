@@ -338,11 +338,11 @@ A leggyakrabban alkalmazott link függvények
 \]</span></p>
 <p><strong>Poisson eloszlás</strong></p>
 <p><span class="math display">\[
-\eta=log(\mu)
+\eta=\log(\mu)
 \]</span></p>
 <p><strong>Binomiális eloszlás</strong></p>
 <p><span class="math display">\[
-\eta=log \left( \frac {\mu} {1-\mu} \right)
+\eta=\log \left( \frac {\mu} {1-\mu} \right)
 \]</span></p>
 <p>Minden eloszlástípushoz megtalálható a linkfüggvény a <a href="https://en.wikipedia.org/wiki/Generalized_linear_model">Wikipedia</a> oldalán.</p>
 </div>
@@ -372,10 +372,10 @@ A leggyakrabban alkalmazott link függvények
 <p><span class="math display">\[
 h(\eta)=\eta^2
 \]</span> <span class="math display">\[
-h(\eta)=log(\eta)
+h(\eta)=\log(\eta)
 \]</span></p>
 <p><span class="math display">\[
-h(\eta)=exp(\eta)
+h(\eta)=\exp(\eta)
 \]</span></p>
 <p>Ezek a nemlineáris alakok is hatékonyan kezelhetők az általánosított modell környezetében.</p>
 </section>
@@ -665,10 +665,6 @@ Goodness-of-fit criteria
 Akaike's Information Criterion    223254.8   223945.6
 Bayesian Information Criterion    223269.0   223959.8</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitdist</span>(mtcars<span class="sc">$</span>mpg, <span class="st">"gamma"</span>) <span class="sc">%&gt;%</span> <span class="fu">llplot</span>() <span class="co"># rajzoljuk ki a becslések likelihood kontúr ábráját</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_GLM_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
-</div>
 </div>
 <p>A gamma eloszlás feltételezését tehát elfogadhatjuk. Illesszünk GLM modellt az adatokra, a díjat magyarázzuk az összes változóval! A legfontosabb, hogy az eloszláscsalád definiálásakor <strong>Gamma</strong> eloszlást adjunk meg (ügyeljünk a nagy kezdőbetűre). Az alábbi eloszláscsaládok kezeltek:</p>
 <ul>
@@ -689,8 +685,8 @@ Bayesian Information Criterion    223269.0   223959.8</code></pre>
 <li>Összhangban van a többi aktuáriusi kockázati modellel.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data =</span> car_insur, PREMIUM<span class="sc">~</span>., <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link=</span><span class="st">"log"</span>)) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data =</span> car_insur, PREMIUM<span class="sc">~</span>., <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link=</span><span class="st">"log"</span>)) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -740,10 +736,10 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </div>
 <p>Sok változónk van, amelyek nem járulnak hozzá a becsléshez, ezért ezek a <span class="math inline">\(\beta_i\)</span> nulla értéket vesznek fel, de legalábbis a <span class="math inline">\(H_0: \beta_i=0\)</span> hipotézist nem lehet elutasítani. A legegyszerűbb módja annak, hogy csak a szignifikáns prediktorok maradjanak a modellben az, hogy valamilyen változószelekciós eljárást alkalmazunk. A legegyszerűbb (és egyben legdurvább) ilyen módszer a <code>sep()</code> (<em>stepwise</em>) algoritmus használata.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>backward_gamma<span class="ot">&lt;-</span><span class="fu">stepAIC</span>(<span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">na.omit</span>(car_insur), PREMIUM<span class="sc">~</span>., <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link=</span><span class="st">"log"</span>)), <span class="at">direction =</span> <span class="st">"backward"</span>, <span class="at">trace=</span><span class="dv">0</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(backward_gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>backward_gamma<span class="ot">&lt;-</span><span class="fu">stepAIC</span>(<span class="fu">glm</span>(<span class="at">data =</span> <span class="fu">na.omit</span>(car_insur), PREMIUM<span class="sc">~</span>., <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link=</span><span class="st">"log"</span>)), <span class="at">direction =</span> <span class="st">"backward"</span>, <span class="at">trace=</span><span class="dv">0</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(backward_gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -778,7 +774,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </div>
 <p>Ha már megvan a modellünk, akkor többféle diagnosztikát is lefuttathatunk a modell jóságának illeszkedésére. A modellszintű illeszkedést a deviancia indikátorok mutatják (lásd később). Itt most az illeszkedést egy másik vetületben értékeljük. Folytonos változók esetén a hibatagokra vonatkozó követelmények hasonlók, mint a klasszikus lineáris regresszió esetében: függetlenség, nulla várható értékű normális eloszlás. Ezeket legtöbbször vizuálisan is tesztelhetjük, mert ha csak nem sértettünk nagyon komolyan a modell előfeltételein, akkor az optimalizációs kritérium miatt a hibatagokra vonatkozó statisztikai követelmények szinte mindig teljesülnek.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(backward_gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(backward_gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="3_GLM_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -867,28 +863,28 @@ Példa Probit és Logit modellek
 <div class="callout-body-container callout-body">
 <p>Használjuk az ismert <strong>car_insur</strong> adatbázist továbbra is, és adjunk becslést arra, hogy lesz-e káreseménye az ügyfélnek! A kalkulált díjat ne használjuk, hiszen ezt a kockázat alapján számoljuk ki.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> OUTCOME <span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>)) <span class="ot">-&gt;</span> glm_probit <span class="co"># futtassunk probit modellt</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> OUTCOME <span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)) <span class="ot">-&gt;</span> glm_logit <span class="co"># futassunk logit modellt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> OUTCOME <span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"probit"</span>)) <span class="ot">-&gt;</span> glm_probit <span class="co"># futtassunk probit modellt</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> OUTCOME <span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)) <span class="ot">-&gt;</span> glm_logit <span class="co"># futassunk logit modellt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Hasonlítsuk össze az eredményeket. A probit modell egy eloszlásfüggvény illesztést ad eredménynek, míg a logit modell visszalakítása ennél egyszerűbb.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>A szükséges csomag betöltődik: ggplot2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(glm_probit<span class="sc">$</span>fitted.values) <span class="ot">-&gt;</span> probit <span class="co"># probit illesztett értékek</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(glm_logit<span class="sc">$</span>fitted.values)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(glm_logit<span class="sc">$</span>fitted.values)) <span class="ot">-&gt;</span> logit <span class="co"># logit illesztett értékek</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Probit=</span>probit, <span class="at">Logit=</span>logit) <span class="sc">%&gt;%</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Probit, <span class="at">y=</span>Logit)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(glm_probit<span class="sc">$</span>fitted.values) <span class="ot">-&gt;</span> probit <span class="co"># probit illesztett értékek</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(glm_logit<span class="sc">$</span>fitted.values)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(glm_logit<span class="sc">$</span>fitted.values)) <span class="ot">-&gt;</span> logit <span class="co"># logit illesztett értékek</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Probit=</span>probit, <span class="at">Logit=</span>logit) <span class="sc">%&gt;%</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Probit, <span class="at">y=</span>Logit)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="3_GLM_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -916,15 +912,15 @@ Példa Poisson eloszlású GLM
 <div class="callout-body-container callout-body">
 <p>Illesszünk Poisson modellt az adatokra a <strong>car_insur</strong> adatbázis <em>PAST_ACCIDENTS</em> változójára. Itt se használjuk a kikalkulált díjat.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    PAST_ACCIDENTS<span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(<span class="st">"log"</span>)) <span class="ot">-&gt;</span> glm_pois_log <span class="co"># log link függvénnyel</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    PAST_ACCIDENTS<span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(<span class="st">"log"</span>)) <span class="ot">-&gt;</span> glm_pois_log <span class="ot">-&gt;</span>glm_pois_ident <span class="co"># identitás link függvénnyel</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_pois_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    PAST_ACCIDENTS<span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(<span class="st">"log"</span>)) <span class="ot">-&gt;</span> glm_pois_log <span class="co"># log link függvénnyel</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glm</span>(<span class="at">data=</span>car_insur,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    PAST_ACCIDENTS<span class="sc">~</span>.<span class="sc">-</span>PREMIUM,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">poisson</span>(<span class="st">"log"</span>)) <span class="ot">-&gt;</span> glm_pois_log <span class="ot">-&gt;</span>glm_pois_ident <span class="co"># identitás link függvénnyel</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_pois_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -971,7 +967,7 @@ AIC: 16236
 
 Number of Fisher Scoring iterations: 17</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_pois_ident)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glm_pois_ident)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1080,7 +1076,7 @@ Kvázi-poisson regresszió
 <p>Az eredeti példa <a href="https://rpubs.com/Julian_Sampedro/1047952">itt</a> található. Mivel a túlszóródást csak ott tudjuk megmutatni, ahol valóban jelen van, ezért olyan adatbázist választottunk, ahol biztosan jól megmutatható a módszer.</p>
 <p>Ebben a kutatásban azt vizsgálták, hogy egy házasságban hányszor lép félre az egyik fél. A félrelépések száma valószínűleg Poisson eloszlást követ.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(AER)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(AER)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>A szükséges csomag betöltődik: AER</code></pre>
 </div>
@@ -1132,21 +1128,21 @@ Kapcsolódás csomaghoz: 'zoo'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: a(z) 'sandwich' csomag az R 4.6.1 verziójával lett fordítva</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Affairs)</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>affairs2<span class="ot">&lt;-</span><span class="fu">sample_n</span>(Affairs, <span class="dv">20</span>)</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(affairs2<span class="sc">$</span>affairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Affairs)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>affairs2<span class="ot">&lt;-</span><span class="fu">sample_n</span>(Affairs, <span class="dv">20</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(affairs2<span class="sc">$</span>affairs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="3_GLM_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Feltételezésünk valószínűleg megállja a helyét. Futtassuk le a GLM regressziónkat.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>pois.model<span class="ot">&lt;-</span><span class="fu">glm</span>(<span class="at">data=</span>affairs2, affairs<span class="sc">~</span>., <span class="at">family =</span> <span class="st">"poisson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>pois.model<span class="ot">&lt;-</span><span class="fu">glm</span>(<span class="at">data=</span>affairs2, affairs<span class="sc">~</span>., <span class="at">family =</span> <span class="st">"poisson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: glm.fit: fitted rates numerically 0 occurred</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pois.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pois.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1178,11 +1174,11 @@ Number of Fisher Scoring iterations: 25</code></pre>
 X^2=\sum_{i=1}^n \frac {(y_i- \tilde{\lambda_i})^2} {\tilde{\lambda_i}}
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>pois.person<span class="ot">&lt;-</span><span class="fu">residuals</span>(pois.model, <span class="at">type =</span> <span class="st">"pearson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>pois.person<span class="ot">&lt;-</span><span class="fu">residuals</span>(pois.model, <span class="at">type =</span> <span class="st">"pearson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Számljuk ki a becsült diszperziós paramétert, ami a person-féle statisztika a modell hibatagjainak szabadságfoka.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(pois.person<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>pois.model<span class="sc">$</span>df.residual</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(pois.person<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>pois.model<span class="sc">$</span>df.residual</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.468431e-11</code></pre>
 </div>
@@ -1190,8 +1186,8 @@ X^2=\sum_{i=1}^n \frac {(y_i- \tilde{\lambda_i})^2} {\tilde{\lambda_i}}
 <p>Az egységnyi diszperziós paraméterre tett feltételezést valószínűleg elvethetjük.</p>
 <p>Futtassunk kvázipoisson modellt.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>quasi.pois.model<span class="ot">&lt;-</span><span class="fu">glm</span>(<span class="at">data=</span>affairs2, affairs<span class="sc">~</span>., <span class="at">family =</span> <span class="st">"quasipoisson"</span>)</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(quasi.pois.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>quasi.pois.model<span class="ot">&lt;-</span><span class="fu">glm</span>(<span class="at">data=</span>affairs2, affairs<span class="sc">~</span>., <span class="at">family =</span> <span class="st">"quasipoisson"</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(quasi.pois.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
