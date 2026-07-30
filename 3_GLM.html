@@ -172,20 +172,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#általánosított-lineáris-modellek" id="toc-általánosított-lineáris-modellek" class="nav-link" data-scroll-target="#általánosított-lineáris-modellek"><span class="header-section-number">5</span> Általánosított lineáris modellek</a>
   <ul class="collapse">
   <li><a href="#lineáris-modellek-visszatekintő" id="toc-lineáris-modellek-visszatekintő" class="nav-link" data-scroll-target="#lineáris-modellek-visszatekintő"><span class="header-section-number">5.1</span> Lineáris modellek visszatekintő</a></li>
-  <li><a href="#univariáns-általánosított-lineáris-modellek" id="toc-univariáns-általánosított-lineáris-modellek" class="nav-link" data-scroll-target="#univariáns-általánosított-lineáris-modellek"><span class="header-section-number">5.2</span> Univariáns általánosított lineáris modellek</a>
+  <li><a href="#modellspecifikáció" id="toc-modellspecifikáció" class="nav-link" data-scroll-target="#modellspecifikáció"><span class="header-section-number">5.2</span> Modellspecifikáció</a>
   <ul class="collapse">
   <li><a href="#a-modellek-felírása" id="toc-a-modellek-felírása" class="nav-link" data-scroll-target="#a-modellek-felírása"><span class="header-section-number">5.2.1</span> A modellek felírása</a></li>
+  <li><a href="#a-link-függvény" id="toc-a-link-függvény" class="nav-link" data-scroll-target="#a-link-függvény"><span class="header-section-number">5.2.2</span> A link függvény</a></li>
+  <li><a href="#idővariáns-megfigyelések-és-exogén-változók" id="toc-idővariáns-megfigyelések-és-exogén-változók" class="nav-link" data-scroll-target="#idővariáns-megfigyelések-és-exogén-változók"><span class="header-section-number">5.2.3</span> Idővariáns megfigyelések és exogén változók</a></li>
   </ul></li>
-  <li><a href="#a-link-függvény" id="toc-a-link-függvény" class="nav-link" data-scroll-target="#a-link-függvény"><span class="header-section-number">5.3</span> A link függvény</a></li>
-  <li><a href="#modellek-folytonos-eloszlású-függő-változóval" id="toc-modellek-folytonos-eloszlású-függő-változóval" class="nav-link" data-scroll-target="#modellek-folytonos-eloszlású-függő-változóval"><span class="header-section-number">5.4</span> Modellek folytonos eloszlású függő változóval</a>
+  <li><a href="#modellek-folytonos-eloszlású-függő-változóval" id="toc-modellek-folytonos-eloszlású-függő-változóval" class="nav-link" data-scroll-target="#modellek-folytonos-eloszlású-függő-változóval"><span class="header-section-number">5.3</span> Modellek folytonos eloszlású függő változóval</a>
   <ul class="collapse">
-  <li><a href="#normális-eloszlás" id="toc-normális-eloszlás" class="nav-link" data-scroll-target="#normális-eloszlás"><span class="header-section-number">5.4.1</span> Normális eloszlás</a></li>
-  <li><a href="#gamma-eloszlás" id="toc-gamma-eloszlás" class="nav-link" data-scroll-target="#gamma-eloszlás"><span class="header-section-number">5.4.2</span> Gamma eloszlás</a></li>
+  <li><a href="#normális-eloszlás" id="toc-normális-eloszlás" class="nav-link" data-scroll-target="#normális-eloszlás"><span class="header-section-number">5.3.1</span> Normális eloszlás</a></li>
+  <li><a href="#gamma-eloszlás" id="toc-gamma-eloszlás" class="nav-link" data-scroll-target="#gamma-eloszlás"><span class="header-section-number">5.3.2</span> Gamma eloszlás</a></li>
   </ul></li>
+  <li><a href="#additív-és-multiplikatív-struktúrák" id="toc-additív-és-multiplikatív-struktúrák" class="nav-link" data-scroll-target="#additív-és-multiplikatív-struktúrák"><span class="header-section-number">5.4</span> Additív és multiplikatív struktúrák</a></li>
   <li><a href="#együtthatók-becslése" id="toc-együtthatók-becslése" class="nav-link" data-scroll-target="#együtthatók-becslése"><span class="header-section-number">5.5</span> Együtthatók becslése</a>
   <ul class="collapse">
   <li><a href="#bevezetés-a-likelihood-alapú-becslésekbe" id="toc-bevezetés-a-likelihood-alapú-becslésekbe" class="nav-link" data-scroll-target="#bevezetés-a-likelihood-alapú-becslésekbe"><span class="header-section-number">5.5.1</span> Bevezetés a likelihood alapú becslésekbe</a></li>
-  <li><a href="#fisher-információ" id="toc-fisher-információ" class="nav-link" data-scroll-target="#fisher-információ"><span class="header-section-number">5.5.2</span> Fisher információ</a></li>
   </ul></li>
   <li><a href="#regressziós-kioefficiensek-becslése" id="toc-regressziós-kioefficiensek-becslése" class="nav-link" data-scroll-target="#regressziós-kioefficiensek-becslése"><span class="header-section-number">5.6</span> Regressziós kioefficiensek becslése</a></li>
   <li><a href="#diagnisztikai-mutatók" id="toc-diagnisztikai-mutatók" class="nav-link" data-scroll-target="#diagnisztikai-mutatók"><span class="header-section-number">5.7</span> Diagnisztikai mutatók</a>
@@ -262,17 +263,18 @@ Var(\hat{\beta})=\sigma^2(X^T X)^{-1}
 <p><span class="math inline">\(\sigma^2\)</span> az <span class="math inline">\(\epsilon_i\)</span> rezidiumok varianciája.</p>
 <p>Ezzel az eljárással az approximációs feladatok azon része, ahol a kezdeti feltételek teljesülnek megoldhatók, a becslések torzítatlansága mellett.</p>
 </section>
-<section id="univariáns-általánosított-lineáris-modellek" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="univariáns-általánosított-lineáris-modellek"><span class="header-section-number">5.2</span> Univariáns általánosított lineáris modellek</h2>
+<section id="modellspecifikáció" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="modellspecifikáció"><span class="header-section-number">5.2</span> Modellspecifikáció</h2>
 <section id="a-modellek-felírása" class="level3" data-number="5.2.1">
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="a-modellek-felírása"><span class="header-section-number">5.2.1</span> A modellek felírása</h3>
 <p>A következő feltételezések az általánosított modellekben is élnek:</p>
 <ol type="1">
 <li>Eloszlásokra vonatkozó feltétel: fel tennünk, hogy <span class="math inline">\(x_i\)</span> és <span class="math inline">\(y_i\)</span> függetlenek, és <span class="math inline">\(y_i\)</span> eloszlása tagja az <strong>exponenciális eloszláscsaládnak</strong> <span class="math inline">\(E(y_i | x_i)=\mu_i\)</span> feltételes várható értékkel, és lehetőleg egy közös <span class="math inline">\(\phi\)</span> skálaparaméterrel.</li>
-<li>Szerkezetre vonatkozó feltétel: <span class="math inline">\(\mu_i\)</span> becslése függ az <span class="math inline">\(\eta_i=z_i^T\beta\)</span> lineáris prediktortól mégpedig a következő módon: <span class="math inline">\(\mu_i=h(\eta_i)=h(z_i^T\beta)\)</span> módon. Ennek inverze pedig <span class="math inline">\(\eta_i\)</span> szerint felírva pedig <span class="math display">\[
-\eta_i=g(\mu_i)
-\]</span></li>
+<li>Szerkezetre vonatkozó feltétel: <span class="math inline">\(\mu_i\)</span> becslése függ az <span class="math inline">\(\eta_i=z_i^T\beta\)</span> lineáris prediktortól mégpedig a következő módon: <span class="math inline">\(\mu_i=h(\eta_i)=h(z_i^T\beta)\)</span> módon. Ennek inverze pedig <span class="math inline">\(\eta_i\)</span> szerint felírva pedig</li>
 </ol>
+<p><span class="math display">\[
+\eta_i=g(\mu_i)
+\]</span></p>
 <p>ahol,</p>
 <p><em>h</em> = egy simító függvény</p>
 <p><em>g</em> = a link függvény, ha <em>h</em> inverze</p>
@@ -313,9 +315,8 @@ var(y_i|x_i)=\sigma^2(\mu_i)=\phi \upsilon (\mu_i) / \omega_i
 </div>
 <p>Látható tehát, hogy a várható érték <span class="math inline">\(\mu=h(z^{'}\beta)\)</span> szerkezetét minden esetben egy specifikus varianciastruktúra követi.</p>
 </section>
-</section>
-<section id="a-link-függvény" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="a-link-függvény"><span class="header-section-number">5.3</span> A link függvény</h2>
+<section id="a-link-függvény" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="a-link-függvény"><span class="header-section-number">5.2.2</span> A link függvény</h3>
 <p>A megfelelő link függvényt minden esetben az eloszláshoz kell választani, azonban minden eloszláshoz rendelhető egy kanonikus alak (a lehető legegyszerűbb formában felírható alak). A természetes link függvények <span class="math inline">\(\theta\)</span> természetes paramétert kötik össze közvetlenül a lineáris prediktorral:</p>
 <p><span class="math display">\[
 \theta=\theta(\mu)=\eta=z^{'}\beta
@@ -348,10 +349,21 @@ A leggyakrabban alkalmazott link függvények
 </div>
 <p>A magyarázó változók vektorát illetően nincs igazán változás a klasszikus lineáris modellekhez képest: legtöbbször a modell tartalmaz egy konstanst (<span class="math inline">\(\beta_0\)</span>), ami a főátlagot jeleníti meg, tehát <em>z</em> a következő <span class="math inline">\(z(1,\omega)\)</span> formát ölti. Ebbe a folytonos változók közvetlenül (transzformáció nélkül) beépíthetők, míg a kategorikus változók esetében szükség lehet transzformációra, ha nem bináris változóról van szó, hanem multinominálisról (ez az ún. hot-encoding eljárás).</p>
 </section>
-<section id="modellek-folytonos-eloszlású-függő-változóval" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="modellek-folytonos-eloszlású-függő-változóval"><span class="header-section-number">5.4</span> Modellek folytonos eloszlású függő változóval</h2>
-<section id="normális-eloszlás" class="level3" data-number="5.4.1">
-<h3 data-number="5.4.1" class="anchored" data-anchor-id="normális-eloszlás"><span class="header-section-number">5.4.1</span> Normális eloszlás</h3>
+<section id="idővariáns-megfigyelések-és-exogén-változók" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="idővariáns-megfigyelések-és-exogén-változók"><span class="header-section-number">5.2.3</span> Idővariáns megfigyelések és exogén változók</h3>
+<p>A GLM modell alapértelmezetten minden megfigyelést azonos súlyúnak tekint, ami a legtöbb modell esetén nem jelent gondot. Biztosítási gyakorlatban azonban sokszor előfordul, hogy a megfigyelés (szerződés) tört évre, vagy egy évnél hosszabb időre vonatkozik. Ebben az esetben a modell nem tekintheti teljes értékűnek a megfigyelést. A töredékes megfigyelés sokszor más változókat is érint: például ha a várható káresemények száma egy év alatt 1, akkor az az ügyfél, aki csak októberben szerződik a tárgyévi káresemény száma 0,25 miközben a kockázata természetesen nem változik! A tört éveket kétféle módon vehetjük figyelembe:</p>
+<ul>
+<li>Az adatokat évesítjük, azaz leosztunk a szerződés hosszával. Gyakorisági (Poisson) modelleknél gyakran alkalmazott eljárás. Ilyenkor a kockázatviselés hosszát az <span class="math inline">\(\omega\)</span> súlyvektorban rögzítjük.</li>
+<li>Fix, rögzített változóként vesszük figyelembe a kockázati kitettséget (<em>offset</em>).</li>
+</ul>
+<p>Árazáskor előfordulhatnak olyan tételek, amelyek a modellek kívül határozódnak meg, de a modellben figyelembe kell őket venni (exogén változók). Ilyen lehet például egy alapköltség, ami területenként eltérő és mindenképpen (rögzítetten) hozzáadódik a díjhoz. Továbbá ilyenek azok a tételek is, amelyek a díjat csökkentik, tipikusan a bonus-malus kategóriák. Ezekhez a modell nem becsül <span class="math inline">\(\beta\)</span> koefficienst, de tudnia szükséges, hogy ezek a tételek még hozzáadódnak a kalkulált díjhoz. Elnevezésük <strong>offset</strong>.</p>
+<p>A kitettségről és az offset-ről bővebben a 6. fejezetben lesz szó.</p>
+</section>
+</section>
+<section id="modellek-folytonos-eloszlású-függő-változóval" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="modellek-folytonos-eloszlású-függő-változóval"><span class="header-section-number">5.3</span> Modellek folytonos eloszlású függő változóval</h2>
+<section id="normális-eloszlás" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="normális-eloszlás"><span class="header-section-number">5.3.1</span> Normális eloszlás</h3>
 <p>Feltételezve, hogy <span class="math inline">\(y \in Y \sim N(\mu, \sigma^2)\)</span> a <em>természetes link függvény</em> választása a klasszikus lineáris modellt implikálja:</p>
 <p><span class="math display">\[
 \mu=\eta=z^{'}\beta
@@ -367,8 +379,8 @@ h(\eta)=exp(\eta)
 \]</span></p>
 <p>Ezek a nemlineáris alakok is hatékonyan kezelhetők az általánosított modell környezetében.</p>
 </section>
-<section id="gamma-eloszlás" class="level3" data-number="5.4.2">
-<h3 data-number="5.4.2" class="anchored" data-anchor-id="gamma-eloszlás"><span class="header-section-number">5.4.2</span> Gamma eloszlás</h3>
+<section id="gamma-eloszlás" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="gamma-eloszlás"><span class="header-section-number">5.3.2</span> Gamma eloszlás</h3>
 <p>A gamma eloszlás egy hasznos eloszlás olyan regressziós vizsgálatok esetén, amely egy folytonos valószínűségi változót közelít, amely <span class="math inline">\(\mathbb{R}^{+}\)</span> tartományon értelmezett. A sűrűségfüggvény:</p>
 <p><span class="math display">\[
 f(y)= \frac {\beta^{\alpha}} {\Gamma(\alpha)}e^{-\beta y}y^{\alpha-1}
@@ -388,6 +400,32 @@ f(y)=\text{exp}\left\{(-\alpha) \frac {y} {\mu}\right\}
 \]</span></p>
 <p>Vagyis a helyes kanonikus link függvény az inverz.</p>
 </section>
+</section>
+<section id="additív-és-multiplikatív-struktúrák" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="additív-és-multiplikatív-struktúrák"><span class="header-section-number">5.4</span> Additív és multiplikatív struktúrák</h2>
+<p>Mint ismeretes a GLM struktúra a <span class="math inline">\(g(\mu_i)=\beta_0+\sum_{j=1}^p \beta_j x_{ij}\)</span> formát ölti, ahol <span class="math inline">\(g(\cdot)\)</span> a link függvényt jelöli. A javasolt link függvények jó matematikai tulajdonságokkal rendelkeznek (gyors és biztosabb konvergencia az MLE becslés során), gyakorlati szempontból, különösen a biztosítási árazás során sokszor előnyösebb lehet más link függvényt alkalmazni. Ezt bizonyos keretek között szabadon megtehetjük anélkül, hogy a feltételeket megsértenénk, de vállalnunk kell annak a kockázatát, hogy az MLE becslés nem biztos, hogy sikeres lesz (jó adatstruktúra és modellspecifikáció esetén erre azonban kicsi az esély).</p>
+<p>Az árazás során a <strong>multiplikatív modellek</strong> jellemzően jobban interpretálhatók, hiszen %-os változást becslünk velük így megszabadulhatunk a pénzbeli értékektől (például “értelmesebb” azt mondani, hogy az ár 10%-kal drágul, mint azt hogy 2381Ft-tal). A multiplikatív modellszerkezet link függvénye a <strong>log link</strong>. A <em>Poisson eloszlásnál</em> eleve ez a javasolt link függvény, míg más eloszlásoknál a <strong>logit link</strong> az alapértelmezett.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Fontos! A log nem azonos a logit függvénnyel!">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Fontos! A log nem azonos a logit függvénnyel!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A gamma és az inverz Gauss eloszlásoknál a javasolt link függvények lecserélhetők a log link függvényre. Az említett eloszlásoknál szükséges megkötések a log link esetén is teljesülnek.</p>
+<p><strong>A log link</strong> (<span class="math inline">\(\mathbf{X}\beta = \ln(\mu)\)</span>) <strong>és a logit függvény</strong> (<span class="math inline">\(\mathbf{X}\beta = \ln \left(\frac {\mu} {1-\mu} \right)\)</span>) <strong>nem azonos, azt lecserélni nem szabad!</strong></p>
+<p><span class="math display">\[
+\ln(\mu) \neq \ln \left(\frac {\mu} {1-\mu} \right)
+\]</span> A logit esetén rendkívül fontos, hogy a binomiális eloszlásnak megfelelve a eredmény szigorúan 0 és 1 közé essen, ezt a log link nem teljesíti.</p>
+</div>
+</div>
+<p>A gamma és az inverz gauss eloszlások esetén a javasolt link függvény lecserélhető, hiszen mindkét eloszlásnál a követelmény az, hogy <span class="math inline">\((0, + \infty)\)</span> tartományon legyen értelmezve a függő változó, és ezt a log link is teljesíti. Ezért a multiplikatív modellszerkezet alkalmazása a legtöbb biztosítási modellezés során javasolt:</p>
+<p><span class="math display">\[
+g(\mu_i)=\exp(\beta_0+\sum_{j=1}^p \beta_j x_{ij})
+\]</span></p>
 </section>
 <section id="együtthatók-becslése" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="együtthatók-becslése"><span class="header-section-number">5.5</span> Együtthatók becslése</h2>
@@ -429,14 +467,14 @@ s_Y(\theta,y)=\frac {\partial \ell_Y} {\partial \theta}(\ell_Y(\theta, y))
 \]</span></p>
 <p>A score várható értéke nulla, és ez a szélőérték keresés kritériuma is egyben.</p>
 </section>
-</section>
-<section id="fisher-információ" class="level3" data-number="5.5.2">
-<h3 data-number="5.5.2" class="anchored" data-anchor-id="fisher-információ"><span class="header-section-number">5.5.2</span> Fisher információ</h3>
+<section id="fisher-információ" class="level4" data-number="5.5.1.2">
+<h4 data-number="5.5.1.2" class="anchored" data-anchor-id="fisher-információ"><span class="header-section-number">5.5.1.2</span> Fisher információ</h4>
 <p>Ha a likelihood függvény első deriváltjának négyzetének várható értéke az úgynevezett <strong>Fisher információ</strong>:</p>
 <p><span class="math display">\[
 I_Y=E \left[\frac {\partial \ell_Y} {\partial \theta} \ell_Y(\theta,y)^2 \right]
 \]</span></p>
 <p>Az információ megmutatja, hogy egy becslésünk <span class="math inline">\(\theta\)</span> paraméterre vonatkozóan mekkora információt tartalmaz, azaz mennyire megbízható. Ha <span class="math inline">\(I_Y\)</span> értéke alacsony, akkor becslésünk kevésbé jó. Fontos tudni, hogy <strong>R</strong> az Fisher információ inverzét közli.</p>
+</section>
 </section>
 </section>
 <section id="regressziós-kioefficiensek-becslése" class="level2" data-number="5.6">
@@ -632,12 +670,12 @@ Bayesian Information Criterion    223269.0   223959.8</code></pre>
 <p><img src="3_GLM_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>A gamma eloszlás feltételezését tehát elfogadhatjuk. Illesszünk GLM modellt az adatokra, a díjat magyarázzuk az összes változóval! A legfontosabb, hogy az eloszláscsalád definiálásakor <strong>Gamma</strong> eloszlást adjunk meg (ügyeljünk a nagy kezdőbetűre). Az alábbi eloszcsaládok kezeltek:</p>
+<p>A gamma eloszlás feltételezését tehát elfogadhatjuk. Illesszünk GLM modellt az adatokra, a díjat magyarázzuk az összes változóval! A legfontosabb, hogy az eloszláscsalád definiálásakor <strong>Gamma</strong> eloszlást adjunk meg (ügyeljünk a nagy kezdőbetűre). Az alábbi eloszláscsaládok kezeltek:</p>
 <ul>
 <li>binomial(link = “logit”)</li>
 <li>gaussian(link = “identity”)</li>
-<li>Gamma(link = “inverse”)</li>
-<li>inverse.gaussian(link = “1/mu^2”)</li>
+<li>Gamma(link = “inverse”) vagy Gamma(link = “log”)</li>
+<li>inverse.gaussian(link = “1/mu^2”) vagy inverse.gaussian(link = “log”)</li>
 <li>poisson(link = “log”)</li>
 <li>quasi(link = “identity”, variance = “constant”)</li>
 <li>quasibinomial(link = “logit”)</li>
